@@ -3,6 +3,7 @@
 import { db } from "@/db";
 import {
   career,
+  footer,
   home,
   jobs,
   partner,
@@ -36,6 +37,10 @@ export const getServiccesDetails = async () => {
 
 export const getCareerDetails = async () => {
   const [item] = await db.select().from(career);
+  return item;
+};
+export const getFooterDetails = async () => {
+  const [item] = await db.select().from(footer);
   return item;
 };
 

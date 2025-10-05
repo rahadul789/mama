@@ -1,5 +1,6 @@
 import {
   integer,
+  jsonb,
   pgEnum,
   pgTable,
   timestamp,
@@ -36,6 +37,18 @@ export const home = pgTable("home", {
     .array()
     .notNull()
     .default(sql`ARRAY[]::varchar[]`),
+  ...timestamps,
+});
+
+export const footer = pgTable("footer", {
+  id: integer().primaryKey().generatedAlwaysAsIdentity(),
+  title: varchar().notNull(),
+  address: varchar().notNull(),
+  email: varchar().notNull(),
+  copyright: varchar().notNull(),
+  facebook: varchar().notNull(),
+  linkedIn: varchar().notNull(),
+
   ...timestamps,
 });
 

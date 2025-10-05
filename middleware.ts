@@ -13,7 +13,7 @@ const protectedRoutes = [
   "/dashboard/partner",
   "/dashboard/mails",
 ];
-const publicRoutes = ["/login", "/signup", "/"];
+const publicRoutes = ["/login", "/signup"];
 
 export default async function middleware(req: NextRequest) {
   // 2. Check if the current route is protected or public

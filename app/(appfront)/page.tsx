@@ -1,16 +1,18 @@
-import { db } from "@/db";
-import { usersTable } from "@/db/schema";
 import React from "react";
+import {
+  getFooterDetails,
+  getHomeDetails,
+  getServiccesDetails,
+  getVisionDetails,
+} from "../lib/data";
 
 const page = async () => {
-  const data = await db.select().from(usersTable);
-  return (
-    <div>
-      {data.map((u) => (
-        <p key={u.id}>{u.name}</p>
-      ))}
-    </div>
-  );
+  const home = getHomeDetails();
+  const vision = getVisionDetails();
+  const service = getServiccesDetails();
+  const footer = getFooterDetails();
+
+  return <div>f</div>;
 };
 
 export default page;

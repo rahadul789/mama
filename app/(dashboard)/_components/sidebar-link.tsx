@@ -9,6 +9,7 @@ import {
   Handshake,
   Home,
   IdCardLanyard,
+  LucidePanelBottom,
   MailsIcon,
   Navigation,
   Settings,
@@ -49,6 +50,11 @@ const items = [
     title: "Mails",
     url: "/mails",
     icon: MailsIcon,
+  },
+  {
+    title: "Footer",
+    url: "/footer",
+    icon: LucidePanelBottom,
   },
   {
     title: "Settings",

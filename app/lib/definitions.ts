@@ -1,3 +1,4 @@
+import { Copyright } from "lucide-react";
 import { z } from "zod";
 
 export const SignupFormSchema = z.object({
@@ -432,5 +433,31 @@ export type DeleteBenefitFormState =
       errors?: { id?: string[] };
       message?: string;
       success?: boolean;
+    }
+  | undefined;
+
+export const footerFormSchema = z.object({
+  title: z.string().min(1, { message: "Title can not be empty." }).trim(),
+  address: z.string().min(1, { message: "Address can not be empty." }).trim(),
+  email: z.string().min(1, { message: "Email can not be empty." }).trim(),
+  facebook: z.string().min(1, { message: "Url can not be empty." }).trim(),
+  linkedIn: z.string().min(1, { message: "Url can not be empty." }).trim(),
+  copyright: z
+    .string()
+    .min(1, { message: "Copyright can not be empty." })
+    .trim(),
+});
+
+export type FooterFormState =
+  | {
+      errors?: {
+        title?: string[];
+        address?: string[];
+        email?: string[];
+        copyright?: string[];
+        facebook?: string[];
+        linkkedIn?: string[];
+      };
+      message?: string;
     }
   | undefined;

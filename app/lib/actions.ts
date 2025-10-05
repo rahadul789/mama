@@ -16,6 +16,7 @@ import {
   DeleteJobFormState,
   DeleteServiceFormSchema,
   DeleteServiceFormState,
+  FooterFormState,
   HomeFormState,
   JobTypeFormState,
   KeyResponsibilitiesFormState,
@@ -31,6 +32,7 @@ import {
   benefitItemFormSchema,
   benefitsFormSchema,
   careerFormSchema,
+  footerFormSchema,
   homeFormSchema,
   jobTypeFormSchema,
   keyResponsibilitiesFormSchema,
@@ -47,6 +49,7 @@ import {
 import { db } from "@/db";
 import {
   career,
+  footer,
   home,
   jobs,
   partner,
@@ -809,4 +812,38 @@ export async function deleteBenefit(
   revalidatePath("/dashboard/partner");
 
   return { success: true };
+}
+
+export async function updateFooter(state: FooterFormState, formData: FormData) {
+  // Validate form fields
+  const validatedFields = footerFormSchema.safeParse({
+    title: formData.get("title"),
+    address: formData.get("address"),
+    email: formData.get("email"),
+    copyright: formData.get("copyright"),
+    facebook: formData.get("facebook"),
+    linkedIn: formData.get("linkedIn"),
+  });
+
+  // If any form fields are invalid, return early
+  if (!validatedFields.success) {
+    console.log(validatedFields.error);
+    return {
+      errors: validatedFields.error.flatten().fieldErrors,
+    };
+  }
+
+  const { title, address, email, copyright, facebook, linkedIn } =
+    validatedFields.data;
+
+  // Call the provider or db to create a user...
+  await db
+    .update(footer)
+    .set({ title, address, email, copyright, facebook, linkedIn });
+
+  revalidatePath("/dashboard/footer");
+
+  return {
+    success: true,
+  };
 }
