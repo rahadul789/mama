@@ -9,7 +9,6 @@ interface SocialLinksPickerProps {
 }
 
 const SocialLinksPicker = ({ links }: SocialLinksPickerProps) => {
-  console.log(links);
   return <div>{JSON.stringify(links, null, 2)}</div>;
 };
 
