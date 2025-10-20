@@ -842,6 +842,7 @@ export async function updateFooter(state: FooterFormState, formData: FormData) {
     .set({ title, address, email, copyright, facebook, linkedIn });
 
   revalidatePath("/dashboard/footer");
+  revalidatePath("/");
 
   return {
     success: true,
