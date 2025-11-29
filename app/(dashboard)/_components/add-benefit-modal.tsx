@@ -34,7 +34,7 @@ export default function AddBenefitModal() {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button>
+        <Button className=" bg-brand-teal hover:bg-brand-teal/80 cursor-pointer">
           <Plus className="h-4 w-4" />
           <span className="ml-1">Add Benefit</span>
         </Button>
@@ -51,7 +51,7 @@ export default function AddBenefitModal() {
         <div className="">
           <form className="space-y-4" action={action}>
             {/* Title */}
-            <div className="shadow-md p-6 rounded-md border-l-4 border-brand-teal space-y-2">
+            <div className=" space-y-1">
               <Label htmlFor="position" className="text-sm font-semibold">
                 Title
               </Label>
@@ -68,7 +68,7 @@ export default function AddBenefitModal() {
             </div>
 
             {/* Description */}
-            <div className="shadow-md p-6 rounded-md border-l-4 border-violet-400 space-y-2">
+            <div className="space-y-1">
               <Label htmlFor="type" className="text-sm font-semibold">
                 Description
               </Label>
@@ -92,11 +92,14 @@ export default function AddBenefitModal() {
               >
                 Cancel
               </Button>
-              <Button disabled={pending}>
+              <Button
+                disabled={pending}
+                className="bg-brand-teal hover:bg-brand-teal/80 cursor-pointer"
+              >
                 {pending ? (
                   <>
                     <Loader2 className=" animate-spin" />
-                    <span>Adding</span>
+                    <span>Adding...</span>
                   </>
                 ) : (
                   "Add"

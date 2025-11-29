@@ -1,82 +1,73 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { motion } from "framer-motion";
 
-export default function CallToAction() {
+interface CallToActionProps {
+  data: {
+    id: number;
+    title: string;
+    subTitle: string;
+    buttonLabel: string;
+    buttonLink: string;
+  };
+}
+
+export default function CallToAction({ data }: CallToActionProps) {
   return (
-    <section className="pb-10">
-      <div className="min-h-[10vh] w-full relative">
-        {/* Dashed Bottom Fade Grid */}
-        <div
-          className="absolute inset-0 z-0"
-          style={{
-            backgroundImage: `
-        linear-gradient(to right, #e7e5e4 1px, transparent 1px),
-        linear-gradient(to bottom, #e7e5e4 1px, transparent 1px)
-      `,
-            backgroundSize: "20px 20px",
-            backgroundPosition: "0 0, 0 0",
-            maskImage: `
-         repeating-linear-gradient(
-              to right,
-              black 0px,
-              black 3px,
-              transparent 3px,
-              transparent 8px
-            ),
-            repeating-linear-gradient(
-              to bottom,
-              black 0px,
-              black 3px,
-              transparent 3px,
-              transparent 8px
-            ),
-            radial-gradient(ellipse 100% 80% at 50% 100%, #000 50%, transparent 90%)
-      `,
-            WebkitMaskImage: `
-  repeating-linear-gradient(
-              to right,
-              black 0px,
-              black 3px,
-              transparent 3px,
-              transparent 8px
-            ),
-            repeating-linear-gradient(
-              to bottom,
-              black 0px,
-              black 3px,
-              transparent 3px,
-              transparent 8px
-            ),
-            radial-gradient(ellipse 100% 80% at 50% 100%, #000 50%, transparent 90%)
-      `,
-            maskComposite: "intersect",
-            WebkitMaskComposite: "source-in",
-          }}
-        />
-        {/* Your Content/Components */}
-        <div className="mx-auto max-w-5xl rounded-3xl border  py-12 md:py-20 lg:py-32  relative">
-          <div className="text-center">
-            <h2 className="text-balance text-4xl lg:text-5xl">
-              Ready to Transform Your Banking Infrastructure?
+    <section className="relative py-20 overflow-hidden">
+      {/* Background soft gradient */}
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(56,189,248,0.08),transparent_65%)]" />
+
+      {/* Subtle animated background grid */}
+      <motion.div
+        animate={{ backgroundPosition: ["0% 0%", "100% 100%"] }}
+        transition={{ duration: 18, repeat: Infinity, ease: "linear" }}
+        className="absolute inset-0 opacity-[0.12] bg-[linear-gradient(to_right,#ccc_1px,transparent_1px),linear-gradient(to_bottom,#ccc_1px,transparent_1px)] bg-[size:32px_32px]"
+      />
+
+      <motion.div
+        initial={{ opacity: 0, y: 100 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.6 }}
+        className="relative mx-auto max-w-6xl px-6"
+      >
+        {/* CTA Container */}
+        <motion.div
+          whileHover={{ scale: 1.015 }}
+          transition={{ duration: 0.3 }}
+          className="relative overflow-hidden rounded-3xl border border-white/20 bg-white/10 backdrop-blur-md shadow-xl px-6 py-16 md:py-24 lg:py-28"
+        >
+          {/* Glow behind card */}
+          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(56,189,248,0.25),transparent_70%)] blur-2xl opacity-60" />
+
+          {/* Extra side gradient accents */}
+          <div className="absolute -left-20 top-1/2 h-40 w-40 bg-brand-teal/30 blur-[120px] rounded-full" />
+          <div className="absolute -right-20 top-1/2 h-40 w-40 bg-sky-400/30 blur-[120px] rounded-full" />
+
+          <div className="relative z-10 text-center max-w-3xl mx-auto">
+            <h2 className="text-4xl leading-tight lg:text-5xl font-semibold">
+              {data.title}
             </h2>
-            <p className="mt-4">
-              Join hundreds of financial institutions already using our platform
+
+            <p className="mt-4 text-base text-muted-foreground leading-relaxed">
+              {data.subTitle}
             </p>
 
-            <div className="mt-12 flex flex-wrap justify-center gap-4">
+            <div className="mt-10">
               <Button
                 asChild
                 size="lg"
-                className=" bg-brand-teal hover:bg-brand-teal/90"
+                className="bg-brand-teal hover:bg-brand-teal/90 shadow-lg hover:shadow-brand-teal/40 transition-all"
               >
-                <Link href="/contact-us">
-                  <span>Contact us</span>
-                </Link>
+                <Link href={data.buttonLink}>{data.buttonLabel}</Link>
               </Button>
             </div>
           </div>
-        </div>
-      </div>
+        </motion.div>
+      </motion.div>
     </section>
   );
 }

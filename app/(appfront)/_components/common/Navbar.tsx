@@ -16,11 +16,11 @@ export function NavbarDemo({ children }: { children?: React.ReactNode }) {
   const navItems = [
     {
       name: "Home",
-      link: "#home",
+      link: "/",
     },
     {
       name: "Services",
-      link: "#services",
+      link: "/services",
     },
     {
       name: "Career",
@@ -28,7 +28,7 @@ export function NavbarDemo({ children }: { children?: React.ReactNode }) {
     },
     {
       name: "Contact Us",
-      link: "/#contact",
+      link: "/contact-us",
     },
   ];
 

@@ -9,11 +9,16 @@ const protectedRoutes = [
   "/dashboard/home",
   "/dashboard/vision",
   "/dashboard/services",
+  "/dashboard/testimony",
+  "/dashboard/infinite",
+  "/dashboard/contact",
   "/dashboard/career",
   "/dashboard/partner",
-  "/dashboard/mails",
+  "/dashboard/messages",
+  "/dashboard/footer",
+  "/dashboard/settings",
 ];
-const publicRoutes = ["/login", "/signup"];
+const publicRoutes = ["/1tltd-login", "/1tltd-signup"];
 
 export default async function middleware(req: NextRequest) {
   // 2. Check if the current route is protected or public
@@ -27,7 +32,7 @@ export default async function middleware(req: NextRequest) {
 
   // 4. Redirect to /login if the user is not authenticated
   if (isProtectedRoute && !session?.userId) {
-    return NextResponse.redirect(new URL("/login", req.nextUrl));
+    return NextResponse.redirect(new URL("/1tltd-login", req.nextUrl));
   }
 
   // 5. Redirect to /dashboard if the user is authenticated

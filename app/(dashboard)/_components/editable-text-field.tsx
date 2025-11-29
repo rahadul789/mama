@@ -2,14 +2,11 @@
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Edit, Loader2, LucideCheck, Trash2, X } from "lucide-react";
+import { Label } from "@/components/ui/label";
+import { Edit, Loader2, Check, X } from "lucide-react";
 import { useActionState, useEffect, useState } from "react";
 import { toast } from "sonner";
 
-/**
- * The server action signature expected by useActionState.
- * Adjust if your action returns a different shape.
- */
 type ServerAction = (
   prevState: any,
   formData: FormData
@@ -22,11 +19,10 @@ type ServerAction = (
 type EditableTextFieldProps = {
   id: number;
   label: string;
-  name: string; // form field name the server action expects, e.g. "position"
+  name: string;
   placeholder?: string;
   initialValue: string;
   action: ServerAction;
-  /** Optional formatter for read mode */
 };
 
 export function EditableTextField({
@@ -37,82 +33,90 @@ export function EditableTextField({
   initialValue,
   action,
 }: EditableTextFieldProps) {
-  const [editing, setEditing] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
   const [value, setValue] = useState(initialValue);
 
   const [state, formAction, pending] = useActionState(action, undefined);
 
   useEffect(() => {
     if (state?.success) {
-      setEditing(false);
+      setIsEditing(false);
       toast.success(state?.message || `${label} updated successfully.`);
-    } else if (state?.errors) {
-      // Show the first error found
+    }
+    if (state?.errors) {
       const first = Object.values(state.errors)[0]?.[0];
       if (first) toast.error(first);
     }
   }, [state, label]);
 
   return (
-    <div>
-      <div className="flex items-center gap-1">
+    <div className="bg-muted/20 p-3 rounded-xl border border-border">
+      {/* HEADER */}
+      <div className="flex items-center gap-2">
         <Edit
-          size={14}
-          className="hover:scale-[1.2] cursor-pointer transition-transform"
+          size={16}
+          className="cursor-pointer text-brand-teal hover:scale-110 transition"
           onClick={(e) => {
             e.stopPropagation();
-            setEditing(true);
+            setIsEditing(!isEditing);
           }}
         />
-        <p className="font-semibold">{label}:</p>
+        <Label className="font-semibold text-sm">{label}</Label>
       </div>
 
-      {editing ? (
+      {/* --------------------------- */}
+      {/* -------- EDIT MODE -------- */}
+      {/* --------------------------- */}
+
+      {isEditing ? (
         <form
           action={formAction}
           onClick={(e) => e.stopPropagation()}
-          className="mt-1"
+          className="mt-3"
         >
-          <div className="flex w-full max-w-sm items-center gap-1">
+          <input type="hidden" name="id" value={id} />
+
+          <div className="flex items-center gap-2">
             <Input
               type="text"
               name={name}
               placeholder={placeholder}
               value={value}
               onChange={(e) => setValue(e.target.value)}
+              className="flex-1"
             />
-            <input type="hidden" name="id" value={id} />
 
-            <div className="flex gap-1">
-              <Button
-                variant="outline"
-                size="icon"
-                type="button"
-                onClick={() => {
-                  setValue(initialValue); // revert
-                  setEditing(false);
-                }}
-              >
-                <X size={16} />
-              </Button>
+            {/* Cancel */}
+            <Button
+              type="button"
+              size="icon"
+              variant="ghost"
+              className="rounded-full hover:bg-red-50 hover:text-red-600"
+              onClick={() => {
+                setValue(initialValue);
+                setIsEditing(false);
+              }}
+            >
+              <X size={16} />
+            </Button>
 
-              <Button
-                type="submit"
-                variant="default"
-                size="icon"
-                disabled={pending}
-              >
-                {pending ? (
-                  <Loader2 className="animate-spin" size={16} />
-                ) : (
-                  <LucideCheck size={16} />
-                )}
-              </Button>
-            </div>
+            {/* Submit */}
+            <Button
+              type="submit"
+              size="icon"
+              className="rounded-full bg-brand-teal text-white hover:bg-brand-teal/90"
+              disabled={pending}
+            >
+              {pending ? (
+                <Loader2 className="animate-spin h-4 w-4" />
+              ) : (
+                <Check size={16} />
+              )}
+            </Button>
           </div>
         </form>
       ) : (
-        <p className="text-sm text-gray-600 mt-1">{initialValue}</p>
+        <p className="text-muted-foreground text-sm mt-2">{initialValue}</p>
       )}
     </div>
   );

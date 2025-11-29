@@ -1,93 +1,146 @@
+"use client";
+
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import {
-  Cpu,
-  Fingerprint,
-  Pencil,
-  Settings2,
-  Sparkles,
-  Zap,
-} from "lucide-react";
+import { Zap, Settings2, Sparkles } from "lucide-react";
 import { ReactNode } from "react";
+import { motion } from "framer-motion";
 
-export default function Features() {
+interface FeaturesProps {
+  data: {
+    id: number;
+    title: string;
+    subTitle: string;
+    feature1Title: string;
+    feature1Description: string;
+    feature2Title: string;
+    feature2Description: string;
+    feature3Title: string;
+    feature3Description: string;
+  };
+}
+
+export default function Features({ data }: FeaturesProps) {
   return (
-    <section className="py-16 md:py-32  bg-[radial-gradient(circle,_rgba(78,157,191,0.78)_5%,_rgba(110,170,194,0)_20%)]">
-      <div className="@container mx-auto max-w-5xl px-6">
+    <section className="relative py-16 md:py-42 overflow-hidden">
+      {/* FIXED — Constrained background glow */}
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+        <div className="w-[900px] h-[900px] bg-[radial-gradient(circle,rgba(78,157,191,0.35)_0%,rgba(110,170,194,0)_70%)] blur-[80px]" />
+      </div>
+
+      <div className="relative mx-auto max-w-6xl px-6 z-10">
         <div className="text-center">
-          <h2 className="text-balance text-4xl font-semibold lg:text-5xl">
-            Built to cover your needs
+          <h2 className="text-4xl lg:text-5xl font-semibold text-[#050b26]">
+            {data.title}
           </h2>
-          <p className="mt-4">
-            Libero sapiente aliquam quibusdam aspernatur, praesentium iusto
-            repellendus.
-          </p>
+          <p className="mt-4 text-gray-600">{data.subTitle}</p>
         </div>
-        <div className="@min-4xl:max-w-full @min-4xl:grid-cols-3 mx-auto mt-8 grid max-w-sm gap-6 [--color-background:var(--color-muted)] [--color-card:var(--color-muted)] *:text-center md:mt-16 dark:[--color-muted:var(--color-zinc-900)]">
-          <Card className="group border-0 shadow-none">
-            <CardHeader className="pb-3">
-              <CardDecorator>
-                <Zap className="size-6" aria-hidden />
-              </CardDecorator>
 
-              <h3 className="mt-6 font-medium">Customizable</h3>
-            </CardHeader>
+        {/* FIXED — Grid now centered + max width applied */}
+        <motion.div
+          initial={{ opacity: 0, y: 60 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.7 }}
+        >
+          <div
+            className="
+        mt-14 grid gap-7 
+        sm:grid-cols-2 
+        lg:grid-cols-3 
+        max-w-4xl mx-auto
+      "
+          >
+            <ModernFeatureCard
+              icon={<Zap className="size-6 text-white" />}
+              title={data.feature1Title}
+              description={data.feature1Description}
+              color="from-teal-400 via-sky-400 to-blue-400"
+            />
 
-            <CardContent>
-              <p className="text-sm">
-                Extensive customization options, allowing you to tailor every
-                aspect to meet your specific needs.
-              </p>
-            </CardContent>
-          </Card>
+            <ModernFeatureCard
+              icon={<Settings2 className="size-6 text-white" />}
+              title={data.feature2Title}
+              description={data.feature2Description}
+              color="from-purple-400 via-fuchsia-400 to-pink-400"
+            />
 
-          <Card className="group border-0 shadow-none">
-            <CardHeader className="pb-3">
-              <CardDecorator>
-                <Settings2 className="size-6" aria-hidden />
-              </CardDecorator>
-
-              <h3 className="mt-6 font-medium">You have full control</h3>
-            </CardHeader>
-
-            <CardContent>
-              <p className="mt-3 text-sm">
-                From design elements to functionality, you have complete control
-                to create a unique and personalized experience.
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card className="group border-0 shadow-none">
-            <CardHeader className="pb-3">
-              <CardDecorator>
-                <Sparkles className="size-6" aria-hidden />
-              </CardDecorator>
-
-              <h3 className="mt-6 font-medium">Powered By AI</h3>
-            </CardHeader>
-
-            <CardContent>
-              <p className="mt-3 text-sm">
-                Elements to functionality, you have complete control to create a
-                unique experience.
-              </p>
-            </CardContent>
-          </Card>
-        </div>
+            <ModernFeatureCard
+              icon={<Sparkles className="size-6 text-white" />}
+              title={data.feature3Title}
+              description={data.feature3Description}
+              color="from-amber-400 via-orange-400 to-red-400"
+            />
+          </div>
+        </motion.div>
       </div>
     </section>
   );
 }
 
-const CardDecorator = ({ children }: { children: ReactNode }) => (
-  <div className="mask-radial-from-40% mask-radial-to-60% relative mx-auto size-36 duration-200 [--color-border:color-mix(in_oklab,var(--color-zinc-950)10%,transparent)] group-hover:[--color-border:color-mix(in_oklab,var(--color-zinc-950)20%,transparent)] dark:[--color-border:color-mix(in_oklab,var(--color-white)15%,transparent)] dark:group-hover:[--color-border:color-mix(in_oklab,var(--color-white)20%,transparent)]">
-    <div
-      aria-hidden
-      className="absolute inset-0 bg-[linear-gradient(to_right,var(--color-border)_1px,transparent_1px),linear-gradient(to_bottom,var(--color-border)_1px,transparent_1px)] bg-[size:24px_24px] dark:opacity-50"
-    />
+/* -----------------------------------------------------------
+   🔥 Modern Feature Card Component
+------------------------------------------------------------ */
 
-    <div className="bg-background absolute inset-0 m-auto flex size-12 items-center justify-center border-l border-t">
-      {children}
-    </div>
+const ModernFeatureCard = ({
+  icon,
+  title,
+  description,
+  color,
+}: {
+  icon: ReactNode;
+  title: string;
+  description: string;
+  color: string;
+}) => {
+  return (
+    <motion.div
+      whileHover={{ y: -6 }}
+      transition={{ type: "spring", stiffness: 150, damping: 12 }}
+      className="relative group"
+    >
+      {/* Glow ring behind icon */}
+      <div
+        className={`absolute -top-10 left-1/2 -translate-x-1/2 w-36 h-36 bg-gradient-to-br ${color} rounded-full blur-3xl opacity-40 group-hover:opacity-60 transition-all duration-500`}
+      />
+
+      <Card
+        className="relative overflow-hidden rounded-2xl border border-white/20 
+        bg-white/10 backdrop-blur-xl shadow-md
+        transition-all duration-500 group-hover:shadow-2xl
+        group-hover:border-white/30 group-hover:bg-white/20"
+      >
+        {/* Light sweep on hover */}
+        <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent opacity-0 group-hover:opacity-100 translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-700 pointer-events-none" />
+
+        <CardHeader className="pb-3 text-center">
+          <IconWrapper color={color}>{icon}</IconWrapper>
+
+          <h3 className="mt-6 font-medium text-[#050b26]">{title}</h3>
+        </CardHeader>
+
+        <CardContent>
+          <p className="text-sm text-gray-700 text-center">{description}</p>
+        </CardContent>
+      </Card>
+    </motion.div>
+  );
+};
+
+/* -----------------------------------------------------------
+   🔥 Fancy Icon Wrapper
+------------------------------------------------------------ */
+
+const IconWrapper = ({
+  children,
+  color,
+}: {
+  children: ReactNode;
+  color: string;
+}) => (
+  <div
+    className={`mx-auto flex size-16 items-center justify-center rounded-xl 
+      bg-gradient-to-br ${color} shadow-lg shadow-black/10`}
+  >
+    {children}
   </div>
 );

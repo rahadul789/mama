@@ -17,23 +17,32 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
+import DropzoneImage from "@/components/dropzone-image";
+import Image from "next/image";
 
 interface HomeSectionFormProps {
   services: {
     id: number;
     serviceId: number;
     title: string;
+    summary: string;
     description: string;
+    url: string;
   };
 }
 [];
 
 const UpdateServiceModal = ({ services }: HomeSectionFormProps) => {
   const [open, setOpen] = useState(false);
+  const [tempUrl, setTempUrl] = useState("");
+  const [editPhoto, setEditPhoto] = useState(false);
+
   const [formData, setFormData] = useState({
     id: services.id,
     title: services.title || "",
+    summary: services.summary || "",
     description: services.description || "",
+    url: services.url || "",
   });
 
   const handleOnChange = (
@@ -56,6 +65,10 @@ const UpdateServiceModal = ({ services }: HomeSectionFormProps) => {
     }
   }, [state]);
 
+  useEffect(() => {
+    setEditPhoto(false);
+  }, [tempUrl]);
+
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
@@ -67,15 +80,67 @@ const UpdateServiceModal = ({ services }: HomeSectionFormProps) => {
           <Edit />
         </Button>
       </DialogTrigger>
-      <DialogContent>
+      <DialogContent className="sm:max-w-2xl">
         <DialogHeader>
           <DialogTitle>Edit service</DialogTitle>
           <DialogDescription></DialogDescription>
         </DialogHeader>
+        <div className="flex items-start gap-4">
+          {/* CURRENT IMAGE */}
+          <div className="relative w-32 h-32 rounded-md overflow-hidden bg-gray-100 group/image">
+            <Image
+              src={tempUrl || formData.url}
+              alt="logo"
+              fill
+              className="object-cover transition-opacity duration-200 group-hover/image:opacity-30 pointer-events-none"
+            />
+
+            {/* Change button */}
+            <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover/image:opacity-100 transition">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setEditPhoto(true)}
+              >
+                Change Photo
+              </Button>
+            </div>
+          </div>
+
+          {/* WHEN CHANGE IS CLICKED → DropzoneImage appears */}
+          {editPhoto && (
+            <div className="relative">
+              <DropzoneImage setUrl={setTempUrl} url={tempUrl} />
+
+              <Button
+                onClick={() => {
+                  setEditPhoto(false);
+                  setTempUrl("");
+                }}
+                className="absolute top-2 right-2"
+                size="icon"
+              >
+                <X />
+              </Button>
+            </div>
+          )}
+        </div>
         <form action={action}>
           <div className="  space-y-4 max-w-2xl">
-            <div className=" shadow-md p-6  rounded-md border-l-4 border-brand-teal border-t-1 space-y-2">
+            <div className=" space-y-1">
               <h2 className=" text-sm font-semibold">Title</h2>
+              <input
+                type="hidden"
+                name="deletedUrl"
+                value={tempUrl ? formData.url : ""}
+              />
+
+              {/* NEW URL → tempUrl OR fallback old */}
+              <input
+                type="hidden"
+                name="url"
+                value={tempUrl ? tempUrl : formData.url}
+              />
               <Input
                 name="title"
                 id="title"
@@ -95,7 +160,24 @@ const UpdateServiceModal = ({ services }: HomeSectionFormProps) => {
                 </p>
               )}
             </div>
-            <div className=" shadow-md p-6  rounded-md border-l-4 border-violet-400 border-t-1 space-y-2">
+            <div className="  space-y-1">
+              <h2 className=" text-sm font-semibold">Summary</h2>
+
+              <Textarea
+                name="summary"
+                id="summary"
+                value={formData.summary}
+                onChange={handleOnChange}
+              />
+
+              {state?.errors?.summary && (
+                <p className=" text-red-700 text-xs font-semibold">
+                  {state.errors.summary}
+                </p>
+              )}
+            </div>
+
+            <div className=" space-y-1">
               <h2 className=" text-sm font-semibold">Description</h2>
 
               <Textarea
@@ -106,7 +188,7 @@ const UpdateServiceModal = ({ services }: HomeSectionFormProps) => {
                 className=" h-40"
               />
 
-              {state?.errors?.title && (
+              {state?.errors?.description && (
                 <p className=" text-red-700 text-xs font-semibold">
                   {state.errors.description}
                 </p>
@@ -115,15 +197,22 @@ const UpdateServiceModal = ({ services }: HomeSectionFormProps) => {
 
             <div className=" flex justify-end gap-2">
               <DialogClose asChild>
-                <Button type="button" variant="secondary">
+                <Button
+                  type="button"
+                  variant="secondary"
+                  className=" cursor-pointer"
+                >
                   Close
                 </Button>
               </DialogClose>
-              <Button disabled={pending}>
+              <Button
+                disabled={pending}
+                className="bg-brand-teal hover:bg-brand-teal/80 cursor-pointer"
+              >
                 {pending ? (
                   <>
                     <Loader2 className=" animate-spin" />
-                    <span>Updating</span>
+                    <span>Updating...</span>
                   </>
                 ) : (
                   "Update"

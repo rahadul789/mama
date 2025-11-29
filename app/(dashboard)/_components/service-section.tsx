@@ -1,10 +1,19 @@
 "use client";
 
-import { updateService, updateVision } from "@/app/lib/actions";
+import { updateService } from "@/app/lib/actions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Loader2 } from "lucide-react";
+
+import {
+  Heading,
+  Quote,
+  Layers,
+  Package,
+  Loader2,
+  ImageIcon,
+} from "lucide-react";
+
 import { ChangeEvent, use, useActionState, useEffect, useState } from "react";
 import { toast } from "sonner";
 import DeleteServiceModal from "./delete-service-modal";
@@ -16,6 +25,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import Image from "next/image";
 
 interface ServiceSectionProps {
   item: Promise<{
@@ -28,10 +38,32 @@ interface ServiceSectionProps {
       id: number;
       serviceId: number;
       title: string;
+      summary: string;
       description: string;
+      url: string;
     }[]
   >;
 }
+
+const CardSection = ({
+  icon: Icon,
+  title,
+  children,
+}: {
+  icon: any;
+  title: string;
+  children: React.ReactNode;
+}) => (
+  <div className="p-6 rounded-xl border bg-card shadow-sm space-y-4">
+    <div className="flex items-center gap-3">
+      <div className="p-3 rounded-lg bg-brand-teal/20 text-brand-teal">
+        <Icon size={20} />
+      </div>
+      <h2 className="text-sm font-semibold">{title}</h2>
+    </div>
+    {children}
+  </div>
+);
 
 const ServiceSection = ({
   item: VisionItem,
@@ -42,7 +74,6 @@ const ServiceSection = ({
   const services = use(allServices);
 
   const [formData, setFormData] = useState({
-    // heroTitle: item.heroTitle || "",
     title: item.title || "",
     subTitle: item.subTitle || "",
   });
@@ -51,136 +82,172 @@ const ServiceSection = ({
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
-
-    setFormData((prevState) => ({
-      ...prevState,
-      [name]: value,
-    }));
+    setFormData((p) => ({ ...p, [name]: value }));
   };
 
   const [state, action, pending] = useActionState(updateService, undefined);
 
   useEffect(() => {
     if (state?.success) {
-      setIsEdit(false);
       toast.success("Data updated successfully.");
+      setIsEdit(false);
     }
   }, [state]);
 
   return (
     <>
-      <form action={action}>
-        <div className=" my-8 space-y-4 max-w-2xl">
-          <div className=" shadow-md p-6  rounded-md border-l-4 border-violet-400 border-t-1 space-y-2">
-            <h2 className=" text-sm font-semibold">Title</h2>
-
-            {isEdit ? (
-              <Input
-                name="title"
-                id="title"
-                value={formData.title}
-                onChange={handleOnChange}
-              />
-            ) : (
-              <p className=" text-muted-foreground">{item.title}</p>
-            )}
-            {state?.errors?.title && (
-              <p className=" text-red-700 text-xs font-semibold">
-                {state.errors.title}
-              </p>
-            )}
-          </div>
-          <div className=" shadow-md p-6  rounded-md border-l-4 border-amber-400 border-t-1 space-y-2">
-            <h2 className=" text-sm font-semibold">Sub Title</h2>
-
-            {isEdit ? (
-              <Input
-                name="subTitle"
-                id="title"
-                value={formData.subTitle}
-                onChange={handleOnChange}
-              />
-            ) : (
-              <p className=" text-muted-foreground">{item.subTitle}</p>
-            )}
-            {state?.errors?.subTitle && (
-              <p className=" text-red-700 text-xs font-semibold">
-                {state.errors.subTitle}
-              </p>
-            )}
-          </div>
-
-          {!isEdit && (
-            <div className=" flex justify-end">
-              <Button onClick={() => setIsEdit((prev) => !prev)}>Edit</Button>
-            </div>
+      {/* MAIN FORM */}
+      <form action={action} className="max-w-3xl space-y-6 my-8">
+        <CardSection icon={Heading} title="Heading">
+          {isEdit ? (
+            <Input
+              name="title"
+              value={formData.title}
+              onChange={handleOnChange}
+            />
+          ) : (
+            <p className="text-muted-foreground">{item.title}</p>
           )}
-          {isEdit && (
-            <div className=" flex justify-end gap-2">
-              <Button
-                variant="secondary"
-                onClick={() => setIsEdit((prev) => !prev)}
-              >
-                Cancel
-              </Button>
-              <Button disabled={pending}>
-                {pending ? (
-                  <>
-                    <Loader2 className=" animate-spin" />
-                    <span>Updating</span>
-                  </>
-                ) : (
-                  "Update"
-                )}
-              </Button>
-            </div>
+          {state?.errors?.title && (
+            <p className="text-sm text-red-600">{state.errors.title}</p>
           )}
-        </div>
+        </CardSection>
+
+        <CardSection icon={Quote} title="Sub Heading">
+          {isEdit ? (
+            <Input
+              name="subTitle"
+              value={formData.subTitle}
+              onChange={handleOnChange}
+            />
+          ) : (
+            <p className="text-muted-foreground">{item.subTitle}</p>
+          )}
+          {state?.errors?.subTitle && (
+            <p className="text-sm text-red-600">{state.errors.subTitle}</p>
+          )}
+        </CardSection>
+
+        {/* ACTION BUTTONS */}
+        {/* {!isEdit ? (
+          <div className="flex justify-end">
+            <Button onClick={() => setIsEdit(true)}>Edit</Button>
+          </div>
+        ) : (
+          <div className="flex justify-end gap-2">
+            <Button variant="secondary" onClick={() => setIsEdit(false)}>
+              Cancel
+            </Button>
+            <Button disabled={pending}>
+              {pending ? (
+                <div className="flex items-center gap-2">
+                  <Loader2 className="animate-spin h-4 w-4" />
+                  Updating...
+                </div>
+              ) : (
+                "Update"
+              )}
+            </Button>
+          </div>
+        )} */}
+        {!isEdit && (
+          <div className=" flex justify-end">
+            <Button
+              className="bg-brand-teal hover:bg-brand-teal/80 cursor-pointer"
+              onClick={() => setIsEdit((prev) => !prev)}
+            >
+              Edit
+            </Button>
+          </div>
+        )}
+        {isEdit && (
+          <div className=" flex justify-end gap-2">
+            <Button
+              variant="secondary"
+              onClick={() => setIsEdit((prev) => !prev)}
+            >
+              Cancel
+            </Button>
+            <Button
+              disabled={pending}
+              className="bg-brand-teal hover:bg-brand-teal/80 cursor-pointer"
+            >
+              {pending ? (
+                <>
+                  <Loader2 className=" animate-spin" />
+                  <span>Updating...</span>
+                </>
+              ) : (
+                "Update"
+              )}
+            </Button>
+          </div>
+        )}
       </form>
-      <div>
-        <p className=" text-xs font-bold">Jobs</p>
-        <div className=" my-4 space-y-4 max-w-2xl">
-          {services.length === 0 && (
-            <div className="p-10 text-center text-muted-foreground border rounded-md space-y-3">
-              <p className=" ">No jobs found.</p>
-              <p className=" text-xs">
-                Please click{" "}
-                <span className=" font-bold text-muted-foreground">
-                  Add Job
-                </span>{" "}
-                to create new jobs.
+
+      {/* SERVICES LIST */}
+      <div className="max-w-3xl space-y-6">
+        <div className="flex items-center gap-3">
+          <div className="p-2 rounded-lg bg-brand-teal/20 text-brand-teal">
+            <Package size={18} />
+          </div>
+          <p className="text-xs font-bold tracking-wide">SERVICES</p>
+        </div>
+
+        <div className="space-y-4">
+          {services.length === 0 ? (
+            <div className="p-10 text-center text-muted-foreground border rounded-xl shadow-sm space-y-2">
+              <p>No services found.</p>
+              <p className="text-xs">
+                Click <b>Add Service</b> to create new services.
               </p>
             </div>
-          )}
-          {services.length > 0 && (
-            <p>
-              Total jobs: <span className=" font-bold">{services.length}</span>
+          ) : (
+            <p className="text-sm">
+              Total services:{" "}
+              <span className="font-bold">{services.length}</span>
             </p>
           )}
+
           {services.map((service) => (
             <div
               key={service.id}
-              className=" shadow-md p-6  rounded-md border-l-4 border-blue-400 border-t-1 space-y-2"
+              className="p-6 rounded-xl border bg-card shadow-sm space-y-4"
             >
-              <Accordion
-                type="single"
-                collapsible
-                className="w-full"
-                defaultValue=""
-              >
+              <Accordion type="single" collapsible className="w-full">
                 <AccordionItem value="item-1">
-                  <AccordionTrigger className=" cursor-pointer">
-                    {service.title}
+                  <AccordionTrigger className="cursor-pointer">
+                    <div className="flex items-center gap-3">
+                      <div className="w-12 h-12 rounded-md overflow-hidden bg-muted flex items-center justify-center">
+                        {service.url ? (
+                          <Image
+                            src={service.url}
+                            alt="logo"
+                            width={40}
+                            height={40}
+                            className="object-cover rounded-sm"
+                          />
+                        ) : (
+                          <ImageIcon className="text-muted-foreground" />
+                        )}
+                      </div>
+                      <p className="font-medium">{service.title}</p>
+                    </div>
                   </AccordionTrigger>
-                  <AccordionContent className="flex flex-col gap-4 text-balance">
-                    <p className=" text-muted-foreground">
+
+                  <AccordionContent className="space-y-3 mt-2">
+                    <p className="text-muted-foreground">{service.summary}</p>
+                    <p className="text-muted-foreground">
                       {service.description}
                     </p>
-                    <div className=" flex justify-end gap-2">
+
+                    <div className="flex justify-end gap-2 pt-2">
                       <UpdateServiceModal services={service} />
                       <DeleteServiceModal
                         id={service.id}
                         title={service.title}
+                        length={services.length}
+                        url={service.url}
                       />
                     </div>
                   </AccordionContent>

@@ -26,7 +26,7 @@ export default async function DashboardLayout({
       >
         <SidebarProvider>
           <AppSidebar />
-          <main className=" w-full px-2 md:px-10 ">
+          <main className=" w-full px-2 md:px-8 ">
             <div className=" sticky top-2">
               <AppNavbar />
             </div>

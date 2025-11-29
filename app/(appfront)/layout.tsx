@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import { NavbarDemo } from "./_components/common/Navbar";
-import Footer from "./_components/common/footer";
-import { getFooterDetails } from "../lib/data";
+import { getAiSettings, getFooterDetails } from "../lib/data";
 import FooterSection from "./_components/common/footer2";
+import { Toaster } from "@/components/ui/sonner";
+import Chatbot from "./_components/chatbot/chatbot";
 
 export const metadata: Metadata = {
   title: "1Technologies",
@@ -15,12 +16,18 @@ export default async function AppfrontLayout({
   children: React.ReactNode;
 }>) {
   const footer = await getFooterDetails();
+  const settings = await getAiSettings();
 
   return (
     <div className=" ">
-      <NavbarDemo>{children}</NavbarDemo>
+      <Chatbot settings={settings} />
+
+      <NavbarDemo>
+        {children}
+        <Toaster position="top-right" richColors />
+      </NavbarDemo>
       {/* <Footer data={footer} /> */}
-      <FooterSection />
+      {footer && <FooterSection data={footer} />}
     </div>
   );
 }

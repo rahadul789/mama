@@ -45,6 +45,23 @@
   /* BRAND_COLOR */
   --color-brand-red: var(--brand-red);
   --color-brand-teal: var(--brand-teal);
+
+  --shadow-input: 0px 2px 3px -1px rgba(0, 0, 0, 0.1),
+    0px 1px 0px 0px rgba(25, 28, 33, 0.02),
+    0px 0px 0px 1px rgba(25, 28, 33, 0.08);
+
+  --animate-spotlight: spotlight 2s ease 0.75s 1 forwards;
+}
+
+@keyframes spotlight {
+  0% {
+    opacity: 0;
+    transform: translate(-72%, -62%) scale(0.5);
+  }
+  100% {
+    opacity: 1;
+    transform: translate(-50%, -40%) scale(1);
+  }
 }
 
 :root {
@@ -172,4 +189,18 @@ button[data-slot="button"] {
   .animate-scroll {
     animation: scroll 2.2s cubic-bezier(0.15, 0.41, 0.69, 0.94) infinite;
   }
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+.no-spinner::-webkit-outer-spin-button,
+.no-spinner::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.no-spinner {
+  -moz-appearance: textfield;
 }

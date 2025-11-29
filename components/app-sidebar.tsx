@@ -9,6 +9,7 @@ import {
 import Link from "next/link";
 
 import SidebarLink from "@/app/(dashboard)/_components/sidebar-link";
+import Image from "next/image";
 
 export async function AppSidebar() {
   return (
@@ -20,7 +21,7 @@ export async function AppSidebar() {
               href="/dashboard"
               className="relative z-20  flex items-center space-x-1  py-1 text-sm font-normal text-black"
             >
-              <img src="/logo.svg" alt="logo" width={30} height={30} />
+              <Image src="/logo.svg" alt="logo" width={30} height={30} />
               <p className="font-medium text-md dark:text-white text-brand-red pb-[2px]">
                 1<span className=" text-brand-teal">Technologies</span>
               </p>

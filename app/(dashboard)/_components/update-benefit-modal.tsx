@@ -69,11 +69,13 @@ const UpdateBenefitModal = ({ benefit }: UpdateBenefitModalProps) => {
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Edit service</DialogTitle>
-          <DialogDescription></DialogDescription>
+          <DialogDescription>
+            You can edit and update your service.
+          </DialogDescription>
         </DialogHeader>
         <form action={action}>
           <div className="  space-y-4 max-w-2xl">
-            <div className=" shadow-md p-6  rounded-md border-l-4 border-brand-teal border-t-1 space-y-2">
+            <div className="  space-y-1">
               <h2 className=" text-sm font-semibold">Title</h2>
               <Input
                 name="title"
@@ -94,7 +96,7 @@ const UpdateBenefitModal = ({ benefit }: UpdateBenefitModalProps) => {
                 </p>
               )}
             </div>
-            <div className=" shadow-md p-6  rounded-md border-l-4 border-violet-400 border-t-1 space-y-2">
+            <div className=" space-y-1">
               <h2 className=" text-sm font-semibold">Description</h2>
 
               <Textarea
@@ -118,11 +120,14 @@ const UpdateBenefitModal = ({ benefit }: UpdateBenefitModalProps) => {
                   Close
                 </Button>
               </DialogClose>
-              <Button disabled={pending}>
+              <Button
+                disabled={pending}
+                className="bg-brand-teal hover:bg-brand-teal/80 cursor-pointer"
+              >
                 {pending ? (
                   <>
                     <Loader2 className=" animate-spin" />
-                    <span>Updating</span>
+                    <span>Updating...</span>
                   </>
                 ) : (
                   "Update"

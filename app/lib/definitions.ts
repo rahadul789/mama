@@ -7,9 +7,10 @@ export const SignupFormSchema = z.object({
     .min(2, { message: "Name must be at least 2 characters long." })
     .trim(),
   email: z.string().email({ message: "Please enter a valid email." }).trim(),
+  pin: z.string().min(2, { message: "Pin is required" }).trim(),
   password: z
     .string()
-    .min(2, { message: "Be at least 8 characters long" })
+    .min(4, { message: "Be at least 4 characters long" })
     // .regex(/[a-zA-Z]/, { message: "Contain at least one letter." })
     // .regex(/[0-9]/, { message: "Contain at least one number." })
     // .regex(/[^a-zA-Z0-9]/, {
@@ -24,6 +25,55 @@ export type FormState =
         name?: string[];
         email?: string[];
         password?: string[];
+        pin?: string[];
+      };
+      message?: string;
+    }
+  | undefined;
+
+export const LoginFormSchema = z.object({
+  email: z.string().email({ message: "Please enter a valid email." }).trim(),
+  password: z.string().trim(),
+});
+
+export type LoginFormState =
+  | {
+      errors?: {
+        email?: string[];
+        password?: string[];
+      };
+      message?: string;
+    }
+  | undefined;
+
+export const ChangePasswordSchema = z
+  .object({
+    oldPassword: z
+      .string()
+      .min(4, { message: "Old password required." })
+      .trim(),
+    newPassword: z
+      .string()
+      .min(4, { message: "Be at least 4 characters long." })
+      // .regex(/[a-zA-Z]/, { message: "Contain at least one letter." })
+      // .regex(/[0-9]/, { message: "Contain at least one number." })
+      // .regex(/[^a-zA-Z0-9]/, {
+      //   message: "Contain at least one special character.",
+      // })
+      .trim(),
+    confirmPassword: z.string().trim(),
+  })
+  .refine((data) => data.newPassword === data.confirmPassword, {
+    path: ["confirmPassword"],
+    message: "Passwords did not match.",
+  });
+
+export type ChangePasswordFormState =
+  | {
+      errors?: {
+        oldPassword?: string[];
+        newPassword?: string[];
+        confirmPassword?: string[];
       };
       message?: string;
     }
@@ -42,69 +92,99 @@ export interface SessionPayload {
 }
 
 export const homeFormSchema = z.object({
-  title: z.string().min(1, { message: "Title can not be empty." }).trim(),
-  subTitle: z
-    .string()
-    .min(1, { message: "Sub Title can not be empty." })
-    .trim(),
-  buttonText: z
-    .string()
-    .min(1, { message: "Button Text can not be empty." })
-    .trim(),
-  features: z
-    .array(z.string().trim().min(1, "Feature cannot be empty"))
-    .min(1, "Features cannot be empty"),
+  badge1: z.string().min(1, { message: "Field can not be empty." }).trim(),
+  badge2: z.string().min(1, { message: "Field can not be empty." }).trim(),
+  title1: z.string().min(1, { message: "Field can not be empty." }).trim(),
+  title2: z.string().min(1, { message: "Field can not be empty." }).trim(),
+  paragraph: z.string().min(1, { message: "Field can not be empty." }).trim(),
+  buttonText: z.string().min(1, { message: "Field can not be empty." }).trim(),
 });
 
 export type HomeFormState =
   | {
       errors?: {
-        title?: string[];
-        subTitle?: string[];
+        badge1?: string[];
+        badge2?: string[];
+        title1?: string[];
+        title2?: string[];
+        paragraph?: string[];
         buttonText?: string[];
-        features?: string[];
       };
       message?: string;
     }
   | undefined;
 
-export const visionFormSchema = z.object({
-  heading: z.string().min(1, { message: "Heading can not be empty." }).trim(),
-  solutionTitle: z
+export const contactFormSchema = z.object({
+  title: z.string().min(1, { message: "Title can not be empty." }).trim(),
+  subTitle: z
     .string()
-    .min(1, { message: "Title can not be empty." })
+    .min(1, { message: "Sub Title can not be empty." })
     .trim(),
-  solutionDescription: z
+  buttonLabel: z
     .string()
-    .min(1, { message: "Description can not be empty." })
+    .min(1, { message: "Button Label can not be empty." })
     .trim(),
-
-  visionTitle: z
+  buttonLink: z
     .string()
-    .min(1, { message: "Description can not be empty." })
-    .trim(),
-  visionDescription: z
-    .string()
-    .min(1, { message: "Description can not be empty." })
-    .trim(),
-
-  impactTitle: z.string().min(1, { message: "Title can not be empty." }).trim(),
-  impactDescription: z
-    .string()
-    .min(1, { message: "Description can not be empty." })
+    .min(1, { message: "Button Link can not be empty." })
     .trim(),
 });
 
-export type VisionFormState =
+export type ContactFormState =
   | {
       errors?: {
-        heading?: string[];
-        solutionTitle?: string[];
-        solutionDescription?: string[];
-        visionTitle?: string[];
-        visionDescription?: string[];
-        impactTitle?: string[];
-        impactDescription?: string[];
+        title?: string[];
+        subTitle?: string[];
+        buttonLabel?: string[];
+        buttonLink?: string[];
+      };
+      message?: string;
+    }
+  | undefined;
+
+export const featuresFormSchema = z.object({
+  title: z.string().min(1, { message: "Field can not be empty." }).trim(),
+  subTitle: z.string().min(1, { message: "Field can not be empty." }).trim(),
+
+  feature1Title: z
+    .string()
+    .min(1, { message: "Field can not be empty." })
+    .trim(),
+  feature1Description: z
+    .string()
+    .min(1, { message: "Field can not be empty." })
+    .trim(),
+
+  feature2Title: z
+    .string()
+    .min(1, { message: "Field can not be empty." })
+    .trim(),
+  feature2Description: z
+    .string()
+    .min(1, { message: "Field can not be empty." })
+    .trim(),
+
+  feature3Title: z
+    .string()
+    .min(1, { message: "Field can not be empty." })
+    .trim(),
+  feature3Description: z
+    .string()
+    .min(1, { message: "Field can not be empty." })
+    .trim(),
+});
+
+export type FeaturesFormState =
+  | {
+      errors?: {
+        title?: string[];
+        subTitle?: string[];
+        feature1Title?: string[];
+        feature1Description?: string[];
+        feature2Title?: string[];
+        feature2Description?: string[];
+        feature3Title?: string[];
+        feature3Description?: string[];
       };
       message?: string;
     }
@@ -131,6 +211,8 @@ export type ServiceFormState =
 export const serviceItemFormSchema = z.object({
   id: z.coerce.number().int().positive(),
   title: z.string().min(1, { message: "Title can not be empty." }).trim(),
+  summary: z.string().min(1, { message: "Summary can not be empty." }).trim(),
+  url: z.string().min(1, { message: "Image is required." }).trim(),
   description: z
     .string()
     .min(1, { message: "Description can not be empty." })
@@ -142,7 +224,28 @@ export type ServiceItemFormState =
       errors?: {
         id?: string[];
         title?: string[];
+        summary?: string[];
         description?: string[];
+        url?: string[];
+      };
+      message?: string;
+    }
+  | undefined;
+
+export const testimonyFormSchema = z.object({
+  heading: z.string().min(1, { message: "Field can not be empty." }).trim(),
+  paragraph: z.string().min(1, { message: "Field can not be empty." }).trim(),
+  testimony: z.string().min(1, { message: "Field can not be empty." }).trim(),
+  author: z.string().min(1, { message: "Field can not be empty." }).trim(),
+});
+
+export type TestimonyFormState =
+  | {
+      errors?: {
+        heading?: string[];
+        paragraph?: string[];
+        testimony?: string[];
+        author?: string[];
       };
       message?: string;
     }
@@ -150,6 +253,9 @@ export type ServiceItemFormState =
 
 export const AddServiceFormSchema = z.object({
   title: z.string().min(1, { message: "Title can not be empty." }).trim(),
+  summary: z.string().min(1, { message: "Summary can not be empty." }).trim(),
+  url: z.string().min(1, { message: "Image is required" }).trim(),
+
   description: z
     .string()
     .min(1, { message: "Description can not be empty." })
@@ -160,19 +266,77 @@ export type AddServiceFormState =
   | {
       errors?: {
         title?: string[];
+        summary?: string[];
         description?: string[];
+        url?: string[];
       };
       message?: string;
     }
   | undefined;
 
+export const AddInfiniteItemsFormSchema = z.object({
+  title: z.string().min(1, { message: "Title can not be empty." }).trim(),
+  heading: z.string().min(1, { message: "Heading can not be empty." }).trim(),
+  url: z.string().min(1, { message: "Image is required" }).trim(),
+});
+
+export const updateInfiniteItemsFormSchema = z.object({
+  id: z.coerce.number().int().positive(), //// pore remove this if not needed
+
+  title: z.string().min(1, { message: "Title can not be empty." }).trim(),
+  url: z.string(),
+  // tempUrl: z.string(),
+  // deletedUrl: z.string(),
+});
+
+export type AddInfiniteItemsFormState =
+  | {
+      errors?: {
+        title?: string[];
+        heading?: string[];
+        url?: string[];
+      };
+      message?: string;
+    }
+  | undefined;
+
+export type AddInfiniteItemsHeadingFormState =
+  | {
+      errors?: {
+        heading?: string[];
+      };
+      message?: string;
+    }
+  | undefined;
+
+export const addInfiniteItemsHeadingFormSchema = z.object({
+  heading: z.string().min(1, { message: "Heading can not be empty." }).trim(),
+});
+
+export const DeleteInfiniteItemFormSchema = z.object({
+  id: z.coerce.number().int().positive(),
+  url: z.string().min(1, { message: "Image cannot be empty." }).trim(),
+});
+
+export type DeleteInfiniteItemFormState =
+  | {
+      errors?: {
+        id?: string[];
+        url?: string[];
+      };
+      message?: string;
+      success?: boolean;
+    }
+  | undefined;
+
 export const DeleteServiceFormSchema = z.object({
   id: z.coerce.number().int().positive(),
+  url: z.string().min(1, { message: "Image cannot be empty." }).trim(),
 });
 
 export type DeleteServiceFormState =
   | {
-      errors?: { id?: string[] };
+      errors?: { id?: string[]; url?: string[] };
       message?: string;
       success?: boolean;
     }
@@ -204,15 +368,44 @@ export type CareerFormState =
   | undefined;
 
 export const AddJobFormSchema = z.object({
-  position: z.string().min(1, { message: "Position cannot be empty." }).trim(),
-  type: z.string().min(1, { message: "Type cannot be empty." }).trim(),
-  salaryRange: z
+  jobStatus: z.string().min(1).trim(),
+  expiresAt: z
     .string()
-    .min(1, { message: "Salary range cannot be empty." })
+    .optional()
+    .nullable()
+    .transform((val) => (val ? new Date(val) : null)),
+  educationLevel: z.string().min(1).trim(),
+  seniorityLevel: z.string().min(1).trim(),
+
+  salaryType: z
+    .string()
+    .min(1, { message: "Salary type cannot be empty." })
     .trim(),
+  salaryMin: z
+    .string()
+    .optional()
+    .transform((v) => (v === "" ? null : v)),
+  salaryMax: z
+    .string()
+    .optional()
+    .transform((v) => (v === "" ? null : v)),
+  salaryInterval: z
+    .string()
+    .optional()
+    .transform((v) => (v === "" ? null : v)),
+  isSalaryVisible: z.string().min(1).trim(),
+
+  position: z.string().min(1, { message: "Position cannot be empty." }).trim(),
+  experience: z
+    .string()
+    .min(1, { message: "Experience cannot be empty." })
+    .trim(),
+  type: z.string().min(1).trim(),
+
   location: z.string().min(1, { message: "Location cannot be empty." }).trim(),
   summary: z.string().min(1, { message: "Summary cannot be empty." }).trim(),
-  // Arrays are validated after we normalize from FormData.getAll(...)
+  hasExpiry: z.string(),
+
   keyResponsibilities: z.array(z.string().min(1).trim()).default([]),
   qualifications: z.array(z.string().min(1).trim()).default([]),
   benefits: z.array(z.string().min(1).trim()).default([]),
@@ -221,7 +414,18 @@ export const AddJobFormSchema = z.object({
 export type AddJobFormState =
   | {
       errors?: {
+        jobStatus?: string[];
+        expiresAt?: string[];
+        educationLevel?: string[];
+        seniorityLevel?: string[];
+        salaryType?: string[];
+        salaryMin?: string[];
+        salaryMax?: string[];
+        salaryInterval?: string[];
+        isSalaryVisible?: string[];
         position?: string[];
+        hasExpire?: string[];
+        experience?: string[];
         type?: string[];
         salaryRange?: string[];
         location?: string[];
@@ -234,7 +438,7 @@ export type AddJobFormState =
     }
   | undefined;
 
-// JOB
+//////////////////////// JOB
 export const positionFormSchema = z.object({
   id: z.coerce.number().int().positive(),
   position: z.string().min(1, { message: "Position can not be empty." }).trim(),
@@ -250,16 +454,104 @@ export type PositionFormState =
     }
   | undefined;
 
+// UPDATE EXPIRE TIME
+export const expireTimeFormSchema = z.object({
+  id: z.coerce.number().int().positive(),
+  // expiresAt: z.string().min(1, { message: "expire date is required." }).trim(),
+});
+
+export type ExpireTimeFormState =
+  | {
+      errors?: {
+        id?: string[];
+        // expiresAt?: string[];
+      };
+      message?: string;
+    }
+  | undefined;
+
+export const experienceFormSchema = z.object({
+  id: z.coerce.number().int().positive(),
+  experience: z
+    .string()
+    .min(1, { message: "Experience can not be empty." })
+    .trim(),
+});
+
+export type ExperienceFormState =
+  | {
+      errors?: {
+        id?: string[];
+        experience?: string[];
+      };
+      message?: string;
+    }
+  | undefined;
+
 export const jobTypeFormSchema = z.object({
   id: z.coerce.number().int().positive(),
-  jobType: z.string().min(1, { message: "Job type can not be empty." }).trim(),
+  type: z.string().min(1, { message: "Job type can not be empty." }).trim(),
 });
 
 export type JobTypeFormState =
   | {
       errors?: {
         id?: string[];
-        jobType?: string[];
+        type?: string[];
+      };
+      message?: string;
+    }
+  | undefined;
+
+export const educationLevelFormSchema = z.object({
+  id: z.coerce.number().int().positive(),
+  educationLevel: z
+    .string()
+    .min(1, { message: "Education level can not be empty." })
+    .trim(),
+});
+
+export type EducationLevelFormState =
+  | {
+      errors?: {
+        id?: string[];
+        educationLevel?: string[];
+      };
+      message?: string;
+    }
+  | undefined;
+
+export const updateJobFormSchema = z.object({
+  id: z.coerce.number().int().positive(),
+  jobStatus: z
+    .string()
+    .min(1, { message: "Job status can not be empty." })
+    .trim(),
+});
+
+export type updateJobFormState =
+  | {
+      errors?: {
+        id?: string[];
+        jobStatus?: string[];
+      };
+      message?: string;
+    }
+  | undefined;
+
+export const seniorityLevelFormSchema = z.object({
+  id: z.coerce.number().int().positive(),
+  seniorityLevel: z
+    .string()
+    .min(1, { message: "Education level can not be empty." })
+    .trim(),
+});
+
+export type SeniorityLevelLevelFormState =
+  | {
+      errors?: {
+        id?: string[];
+        seniorityLevel?: string[];
       };
       message?: string;
     }
@@ -267,17 +559,14 @@ export type JobTypeFormState =
 
 export const salaryFormSchema = z.object({
   id: z.coerce.number().int().positive(),
-  salaryRange: z
-    .string()
-    .min(1, { message: "Salary can not be empty." })
-    .trim(),
+  salaryType: z.string().min(1, { message: "Salary can not be empty." }).trim(),
 });
 
 export type SalaryFormState =
   | {
       errors?: {
         id?: string[];
-        salaryRange?: string[];
+        salaryType?: string[];
       };
       message?: string;
     }
@@ -382,23 +671,39 @@ export type AddPartnerBenefitFormState =
   | undefined;
 
 export const partnerFormSchema = z.object({
-  heroTitle: z
+  bannerTitle: z.string().min(1, { message: "Field can not be empty." }).trim(),
+  bannerParagraph: z
     .string()
-    .min(1, { message: "Hero Title can not be empty." })
+    .min(1, { message: "Field can not be empty." })
     .trim(),
-  title: z.string().min(1, { message: "Title can not be empty." }).trim(),
-  heroDescription: z
+  benefitTitle: z
     .string()
-    .min(1, { message: "Description can not be empty." })
+    .min(1, { message: "Field can not be empty." })
     .trim(),
+  contactTitle: z
+    .string()
+    .min(1, { message: "Field can not be empty." })
+    .trim(),
+  contactParagraph: z
+    .string()
+    .min(1, { message: "Field can not be empty." })
+    .trim(),
+  email: z.string().min(1, { message: "Field can not be empty." }).trim(),
+  buttonLabel: z.string().min(1, { message: "Field can not be empty." }).trim(),
+  buttonLink: z.string().min(1, { message: "Field can not be empty." }).trim(),
 });
 
 export type PartnerFormState =
   | {
       errors?: {
-        heroTitle?: string[];
-        title?: string[];
-        heroDescription?: string[];
+        bannerTitle?: string[];
+        bannerParagraph?: string[];
+        benefitTitle?: string[];
+        contactTitle?: string[];
+        contactParagraph?: string[];
+        email?: string[];
+        buttonLabel?: string[];
+        buttonLink?: string[];
       };
       message?: string;
     }
@@ -457,6 +762,94 @@ export type FooterFormState =
         copyright?: string[];
         facebook?: string[];
         linkkedIn?: string[];
+      };
+      message?: string;
+    }
+  | undefined;
+
+// APPLIED JOBS
+export const appliedJobsSchema = z.object({
+  position: z.string().min(1, { message: "Field can not be empty." }).trim(),
+  experience: z.string().min(1, { message: "Field can not be empty." }).trim(),
+  name: z.string().min(1, { message: "Name can not be empty." }).trim(),
+  email: z.string().min(1, { message: "Email can not be empty." }).trim(),
+  phone: z.string().min(1, { message: "Phone no can not be empty." }).trim(),
+  location: z.string().min(1, { message: "Location can not be empty." }).trim(),
+  github: z.string().optional(),
+  linkedIn: z.string().optional(),
+  expectedSalary: z
+    .string()
+    .min(1, { message: "Expected salary can not be empty." }),
+  whyInterested: z
+    .string()
+    .min(1, { message: "Field can not be empty." })
+    .trim(),
+  keySkills: z.string().optional(),
+  coverLetter: z.string().optional(),
+  resumeUrl: z.string().min(1, { message: "CV/Resume is required." }).trim(),
+});
+
+export type appliedJobsFormState =
+  | {
+      errors?: {
+        position?: string[];
+        experience?: string[];
+        name?: string[];
+        email?: string[];
+        phone?: string[];
+        location?: string[];
+        github?: string[];
+        linkedIn?: string[];
+        expectedSalary?: string[];
+        whyInterested?: string[];
+        keySkills?: string[];
+        coverLetter?: string[];
+        resumeUrl?: string[];
+      };
+      message?: string;
+    }
+  | undefined;
+
+export const AddMessageFormSchema = z.object({
+  name: z.string().min(1, { message: "Name can not be empty." }).trim(),
+  email: z.string().min(1, { message: "Email can not be empty." }).trim(),
+  message: z.string().min(1, { message: "Message can not be empty." }).trim(),
+});
+
+export type AddMessageFormState =
+  | {
+      errors?: {
+        name?: string[];
+        email?: string[];
+        message?: string[];
+      };
+      message?: string;
+    }
+  | undefined;
+
+export type AddSettingsFormState =
+  | {
+      errors?: {
+        pin?: string[];
+      };
+      message?: string;
+    }
+  | undefined;
+
+export const addSettingsFormSchema = z.object({
+  pin: z.string().min(1, { message: "Pin can not be empty." }).trim(),
+});
+
+// AI CHATBOT
+
+export const aiQuestionFormSchema = z.object({
+  question: z.string().min(1, { message: "Field can not be empty." }).trim(),
+});
+
+export type AiQuestionFormState =
+  | {
+      errors?: {
+        question?: string[];
       };
       message?: string;
     }

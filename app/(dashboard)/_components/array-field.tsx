@@ -21,7 +21,7 @@ export function ArrayField({
     setValues(values.map((val, i) => (i === idx ? v : val)));
 
   return (
-    <div className="shadow-md p-6 rounded-md border-l-4 border-amber-400 space-y-3">
+    <div className="shadow-md p-6 rounded-md border-l-4 border-brand-teal space-y-3">
       <div>
         <h2 className="text-sm font-semibold flex items-center gap-2">
           {label}
@@ -34,19 +34,23 @@ export function ArrayField({
       <div className="space-y-3">
         {values.map((val, idx) => (
           <div key={idx} className="flex items-center gap-2">
-            {/* Use [] so Next/Node parses multiple values with formData.getAll */}
             <Input
               name={`${fieldName}[]`}
               value={val}
               onChange={(e) => update(idx, e.target.value)}
               placeholder={`Item ${idx + 1}`}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  e.preventDefault();
+                  add();
+                }
+              }}
             />
             <Button
               type="button"
               variant="ghost"
               size="icon"
               onClick={() => remove(idx)}
-              aria-label="Remove item"
             >
               <X className="h-4 w-4" />
             </Button>

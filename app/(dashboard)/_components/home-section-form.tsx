@@ -1,10 +1,19 @@
 "use client";
 
 import { updateHome } from "@/app/lib/actions";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Loader2, X } from "lucide-react";
+import { Textarea } from "@/components/ui/textarea";
+
+import {
+  Tag,
+  Type,
+  FileText,
+  BadgeCheck,
+  SquareMousePointer,
+  Loader2,
+} from "lucide-react";
+
 import {
   ChangeEvent,
   use,
@@ -18,197 +27,225 @@ import { toast } from "sonner";
 interface HomeSectionFormProps {
   item: Promise<{
     id: number;
-    title: string;
-    subTitle: string;
+    title1: string;
+    title2: string;
+    badge1: string;
+    badge2: string;
+    paragraph: string;
     buttonText: string;
-    features: string[];
   }>;
 }
 
+const SectionCard = ({
+  icon: Icon,
+  title,
+  children,
+}: {
+  icon: any;
+  title: string;
+  children: React.ReactNode;
+}) => {
+  return (
+    <div className="p-6 rounded-xl border bg-card shadow-sm space-y-3">
+      <div className="flex items-center gap-3">
+        <div className="p-3 rounded-lg bg-brand-teal/20 text-brand-teal">
+          <Icon size={20} />
+        </div>
+        <h2 className="text-sm font-semibold">{title}</h2>
+      </div>
+      {children}
+    </div>
+  );
+};
+
 const HomeSectionForm = ({ item: homeItem }: HomeSectionFormProps) => {
   const [isEdit, setIsEdit] = useState(false);
-  const [feature, setFeature] = useState("");
   const item = use(homeItem);
-  const featureRef = useRef<HTMLInputElement>(null);
 
   const [formData, setFormData] = useState({
-    title: item.title || "",
-    subTitle: item.subTitle || "",
+    badge1: item.badge1 || "",
+    badge2: item.badge2 || "",
+    title1: item.title1 || "",
+    title2: item.title2 || "",
+    paragraph: item.paragraph || "",
     buttonText: item.buttonText || "",
-    features: item.features || [],
   });
 
-  const handleOnChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleOnChange = (
+    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     const { name, value } = e.target;
-
-    setFormData((prevState) => ({
-      ...prevState,
-      [name]: value,
-    }));
+    setFormData((p) => ({ ...p, [name]: value }));
   };
 
   const [state, action, pending] = useActionState(updateHome, undefined);
 
-  const addFeatures = (feature: string) => {
-    if (feature === "" || feature.trim() === "") return;
-    setFormData((prevState) => ({
-      ...prevState,
-      features: [...prevState.features, feature],
-    }));
-    if (featureRef.current) {
-      featureRef.current.value = "";
-      setFeature("");
-    }
-  };
-
-  const removeFeatures = (idx: number) => {
-    setFormData((prevState) => ({
-      ...prevState,
-      features: prevState.features.filter((_, index) => index !== idx),
-    }));
-  };
-
   useEffect(() => {
     if (state?.success) {
-      setIsEdit(false);
       toast.success("Data updated successfully.");
+      setIsEdit(false);
     }
   }, [state]);
 
   return (
-    <form action={action}>
-      <div className=" my-8 space-y-4 max-w-2xl">
-        <div className=" shadow-md p-6  rounded-md border-l-4 border-brand-teal border-t-1 space-y-2">
-          <h2 className=" text-sm font-semibold">Title</h2>
-          {isEdit ? (
-            <Input
-              name="title"
-              id="title"
-              value={formData.title}
-              onChange={handleOnChange}
-            />
-          ) : (
-            <p className=" text-muted-foreground">{item.title}</p>
-          )}
-          {state?.errors?.title && (
-            <p className=" text-red-700 text-xs font-semibold">
-              {state.errors.title}
-            </p>
-          )}
-        </div>
-        <div className=" shadow-md p-6  rounded-md border-l-4 border-brand-red border-t-1 space-y-2">
-          <h2 className=" text-sm font-semibold">Sub Title</h2>
+    <form action={action} className="max-w-3xl space-y-6 pb-10">
+      {/* Badge 1 */}
+      <SectionCard icon={BadgeCheck} title="Badge 1">
+        {isEdit ? (
+          <Input
+            name="badge1"
+            value={formData.badge1}
+            onChange={handleOnChange}
+          />
+        ) : (
+          <p className="text-muted-foreground">{item.badge1}</p>
+        )}
+        {state?.errors?.badge1 && (
+          <p className="text-sm text-red-600">{state.errors.badge1}</p>
+        )}
+      </SectionCard>
 
-          {isEdit ? (
-            <Input
-              name="subTitle"
-              id="subTitle"
-              value={formData.subTitle}
-              onChange={handleOnChange}
-            />
-          ) : (
-            <p className=" text-muted-foreground">{item.subTitle}</p>
-          )}
-          {state?.errors?.title && (
-            <p className=" text-red-700 text-xs font-semibold">
-              {state.errors.subTitle}
-            </p>
-          )}
-        </div>
-        <div className=" shadow-md p-6  rounded-md border-l-4 border-violet-400 border-t-1 space-y-2">
-          <h2 className=" text-sm font-semibold">Features</h2>
-          <div className=" flex gap-2 flex-wrap">
-            {formData.features.map((feature, idx) => (
-              <Badge key={idx} className=" select-none">
-                {feature}
-                {isEdit && (
-                  <div
-                    onClick={() => removeFeatures(idx)}
-                    className=" cursor-pointer"
-                  >
-                    <X className=" p-1 hover:text-red-600" />
-                  </div>
-                )}
-              </Badge>
-            ))}
-          </div>
+      {/* Badge 2 */}
+      <SectionCard icon={BadgeCheck} title="Badge 2">
+        {isEdit ? (
+          <Input
+            name="badge2"
+            value={formData.badge2}
+            onChange={handleOnChange}
+          />
+        ) : (
+          <p className="text-muted-foreground">{item.badge2}</p>
+        )}
+        {state?.errors?.badge2 && (
+          <p className="text-sm text-red-600">{state.errors.badge2}</p>
+        )}
+      </SectionCard>
 
-          {isEdit && (
-            <>
-              <Input
-                placeholder="Add features"
-                onChange={(e) => {
-                  setFeature(e.target.value);
-                }}
-                ref={featureRef}
-              />
-              {state?.errors?.features && (
-                <p className=" text-red-700 text-xs font-semibold ">
-                  {state.errors.features}
-                </p>
-              )}
-              <input
-                type="hidden"
-                name="features"
-                value={JSON.stringify(formData.features)}
-              />
-              <div className=" flex justify-end">
-                <Button
-                  type="button"
-                  onClick={() => {
-                    addFeatures(feature);
-                  }}
-                >
-                  Add
-                </Button>
+      {/* Title 1 */}
+      <SectionCard icon={Type} title="Title 1">
+        {isEdit ? (
+          <Input
+            name="title1"
+            value={formData.title1}
+            onChange={handleOnChange}
+          />
+        ) : (
+          <p className="text-muted-foreground">{item.title1}</p>
+        )}
+        {state?.errors?.title1 && (
+          <p className="text-sm text-red-600">{state.errors.title1}</p>
+        )}
+      </SectionCard>
+
+      {/* Title 2 */}
+      <SectionCard icon={Type} title="Title 2">
+        {isEdit ? (
+          <Input
+            name="title2"
+            value={formData.title2}
+            onChange={handleOnChange}
+          />
+        ) : (
+          <p className="text-muted-foreground">{item.title2}</p>
+        )}
+        {state?.errors?.title2 && (
+          <p className="text-sm text-red-600">{state.errors.title2}</p>
+        )}
+      </SectionCard>
+
+      {/* Paragraph */}
+      <SectionCard icon={FileText} title="Paragraph">
+        {isEdit ? (
+          <Textarea
+            name="paragraph"
+            value={formData.paragraph}
+            onChange={handleOnChange}
+          />
+        ) : (
+          <p className="text-muted-foreground whitespace-pre-line">
+            {item.paragraph}
+          </p>
+        )}
+
+        {state?.errors?.paragraph && (
+          <p className="text-sm text-red-600">{state.errors.paragraph}</p>
+        )}
+      </SectionCard>
+
+      {/* Button Text */}
+      <SectionCard icon={SquareMousePointer} title="Button Text">
+        {isEdit ? (
+          <Input
+            name="buttonText"
+            value={formData.buttonText}
+            onChange={handleOnChange}
+          />
+        ) : (
+          <p className="text-muted-foreground">{item.buttonText}</p>
+        )}
+
+        {state?.errors?.buttonText && (
+          <p className="text-sm text-red-600">{state.errors.buttonText}</p>
+        )}
+      </SectionCard>
+
+      {/* ACTION BUTTONS */}
+      {/* {!isEdit ? (
+        <div className="flex justify-end">
+          <Button onClick={() => setIsEdit(true)}>Edit</Button>
+        </div>
+      ) : (
+        <div className="flex justify-end gap-2">
+          <Button variant="secondary" onClick={() => setIsEdit(false)}>
+            Cancel
+          </Button>
+
+          <Button disabled={pending}>
+            {pending ? (
+              <div className="flex items-center gap-2">
+                <Loader2 className="animate-spin h-4 w-4" />
+                Updating...
               </div>
-            </>
-          )}
+            ) : (
+              "Update"
+            )}
+          </Button>
         </div>
-        <div className=" shadow-md p-6  rounded-md border-l-4 border-amber-400 border-t-1 space-y-2">
-          <h2 className=" text-sm font-semibold">Button Text</h2>
-          {isEdit ? (
-            <Input
-              name="buttonText"
-              id="buttonText"
-              value={formData.buttonText}
-              onChange={handleOnChange}
-            />
-          ) : (
-            <p className=" text-muted-foreground">{item.buttonText}</p>
-          )}
-          {state?.errors?.title && (
-            <p className=" text-red-700 text-xs font-semibold">
-              {state.errors.buttonText}
-            </p>
-          )}
+      )} */}
+
+      {!isEdit && (
+        <div className=" flex justify-end">
+          <Button
+            className="bg-brand-teal hover:bg-brand-teal/80 cursor-pointer"
+            onClick={() => setIsEdit((prev) => !prev)}
+          >
+            Edit
+          </Button>
         </div>
-        {!isEdit && (
-          <div className=" flex justify-end">
-            <Button onClick={() => setIsEdit((prev) => !prev)}>Edit</Button>
-          </div>
-        )}
-        {isEdit && (
-          <div className=" flex justify-end gap-2">
-            <Button
-              variant="secondary"
-              onClick={() => setIsEdit((prev) => !prev)}
-            >
-              Cancel
-            </Button>
-            <Button disabled={pending}>
-              {pending ? (
-                <>
-                  <Loader2 className=" animate-spin" />
-                  <span>Updating</span>
-                </>
-              ) : (
-                "Update"
-              )}
-            </Button>
-          </div>
-        )}
-      </div>
+      )}
+      {isEdit && (
+        <div className=" flex justify-end gap-2">
+          <Button
+            variant="secondary"
+            onClick={() => setIsEdit((prev) => !prev)}
+          >
+            Cancel
+          </Button>
+          <Button
+            disabled={pending}
+            className="bg-brand-teal hover:bg-brand-teal/80 cursor-pointer"
+          >
+            {pending ? (
+              <>
+                <Loader2 className=" animate-spin" />
+                <span>Updating</span>
+              </>
+            ) : (
+              "Update"
+            )}
+          </Button>
+        </div>
+      )}
     </form>
   );
 };

@@ -41,9 +41,9 @@ const DeleteBenefitModal = ({ id, title }: { id: number; title: string }) => {
     <AlertDialog open={open} onOpenChange={setOpen}>
       <AlertDialogTrigger asChild>
         <Button
-          className=" rounded-full cursor-pointer "
+          className=" rounded-full cursor-pointer text-red-500 hover:bg-red-100 "
           size="icon"
-          variant="destructive"
+          variant="secondary"
         >
           <Trash2 />
         </Button>

@@ -9,13 +9,25 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { LogOut, User, UserCircleIcon } from "lucide-react";
+import { PencilLine, User, UserCircleIcon } from "lucide-react";
+import { deleteSession } from "@/app/lib/session";
+import { LogoutButton } from "./logout-button";
+import UpdatePassword from "./update-password";
+import { loggedInUser } from "@/app/actions/auth";
 
-export default function AppNavbar() {
+export default async function AppNavbar() {
+  const handleLogout = async () => {
+    "use server";
+    await deleteSession();
+  };
+
+  const user = await loggedInUser();
   return (
     <div className=" mt-2">
       <div className=" flex gap-3 justify-between backdrop-blur-2xl p-1 ">
-        <SidebarTrigger />
+        <div className="  -translate-x-3">
+          <SidebarTrigger />
+        </div>
         <div className=" flex gap-2 ">
           <ModeToggle />
           <div>
@@ -23,21 +35,22 @@ export default function AppNavbar() {
               <DropdownMenuTrigger asChild>
                 <Button variant="outline" className=" rounded-full">
                   <User className=" text-brand-red" />{" "}
-                  <span className=" text-xs text-brand-teal">Rahadul Haq</span>
+                  <span className=" text-xs text-brand-teal">
+                    {user && user.name}
+                  </span>
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent className="min-w-36" align="start">
+              <DropdownMenuContent className="  w-46" align="end">
                 <DropdownMenuItem disabled className=" text-xs text-wrap">
-                  haqrahadul@gmail.com
+                  {user && user.email}
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem>
+                {/* <DropdownMenuItem>
                   <UserCircleIcon /> <span className=" pb-[2px]">Profile</span>
-                </DropdownMenuItem>
-                <DropdownMenuItem variant="destructive">
-                  <LogOut size={2} />
-                  <span className=" pb-1">Log out</span>
-                </DropdownMenuItem>
+                </DropdownMenuItem> */}
+                <UpdatePassword />
+                <div className=" border-b my-1" />
+                <LogoutButton handleLogout={handleLogout} />
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
