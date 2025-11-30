@@ -36,7 +36,7 @@ export function NavbarDemo({ children }: { children?: React.ReactNode }) {
 
   return (
     <div className="relative w-full">
-      <Navbar className="top-2">
+      <Navbar className="top-2 z-50">
         {/* Desktop Navigation */}
         <NavBody>
           <NavbarLogo />
