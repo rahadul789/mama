@@ -271,6 +271,7 @@ export function Job({ job }: JobProps) {
 
             <EditableTextField
               id={job.id}
+              txtArea={true}
               label="Summary"
               name="summary"
               placeholder="Write a short summary..."

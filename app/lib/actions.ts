@@ -12,7 +12,7 @@ import {
   AddPartnerBenefitFormState,
   AddServiceFormSchema,
   AddServiceFormState,
-  AddSettingsFormState,
+  // AddSettingsFormState,
   AiQuestionFormState,
   BenefitItemFormState,
   BenefitsFormState,
@@ -42,10 +42,12 @@ import {
   SeniorityLevelLevelFormState,
   ServiceFormState,
   ServiceItemFormState,
+  SettingKey,
+  SettingsFormState,
   SummaryFormState,
   TestimonyFormState,
   addInfiniteItemsHeadingFormSchema,
-  addSettingsFormSchema,
+  // addSettingsFormSchema,
   aiQuestionFormSchema,
   appliedJobsFormState,
   appliedJobsSchema,
@@ -69,6 +71,7 @@ import {
   seniorityLevelFormSchema,
   serviceFormSchema,
   serviceItemFormSchema,
+  settingValidators,
   summaryFormSchema,
   testimonyFormSchema,
   updateInfiniteItemsFormSchema,
@@ -101,6 +104,7 @@ import { PinataSDK } from "pinata";
 import z from "zod";
 import { sendJobApplicationMail } from "./mail";
 import { loggedInUser } from "../actions/auth";
+import { sendContactMail } from "./contact-mail";
 
 export async function updateHome(state: HomeFormState, formData: FormData) {
   // Validate form fields
@@ -1746,6 +1750,15 @@ export async function addMessage(
     message,
   });
 
+  // -------------------------------------------
+  // SEND EMAIL NOTIFICATION TO YOU (ADMIN)
+  // -------------------------------------------
+  await sendContactMail({
+    name: name,
+    email: email,
+    message: message,
+  });
+
   revalidatePath("/contact-us");
 
   return {
@@ -1777,35 +1790,85 @@ export async function deleteMessage(state: any, formData: FormData) {
   return { success: true };
 }
 
-export async function updateSettings(
-  state: AddSettingsFormState,
-  formData: FormData
-) {
-  // Validate form fields
-  const validatedFields = addSettingsFormSchema.safeParse({
-    pin: formData.get("pin"),
-  });
+// export async function updateSettings(
+//   state: AddSettingsFormState,
+//   formData: FormData
+// ) {
+//   // Validate form fields
+//   const validatedFields = addSettingsFormSchema.safeParse({
+//     pin: formData.get("pin"),
+//   });
 
-  // If any form fields are invalid, return early
-  if (!validatedFields.success) {
-    console.log(validatedFields.error);
+//   // If any form fields are invalid, return early
+//   if (!validatedFields.success) {
+//     console.log(validatedFields.error);
+//     return {
+//       errors: validatedFields.error.flatten().fieldErrors,
+//     };
+//   }
+
+//   const { pin } = validatedFields.data;
+
+//   // Call the provider or db to create a user...
+//   await db.update(settings).set({
+//     pin,
+//   });
+
+//   revalidatePath("/dashboard/settings");
+
+//   return {
+//     success: true,
+//   };
+// }
+
+//  copied below from chatgpt
+
+export async function updateSettings(
+  state: SettingsFormState,
+  formData: FormData
+): Promise<SettingsFormState> {
+  const field = formData.get("field");
+  const value = formData.get("value");
+
+  if (typeof field !== "string" || typeof value !== "string") {
     return {
-      errors: validatedFields.error.flatten().fieldErrors,
+      errors: {
+        field: ["Invalid setting field."],
+      },
     };
   }
 
-  const { pin } = validatedFields.data;
+  if (!(field in settingValidators)) {
+    return {
+      errors: {
+        field: ["This setting cannot be updated."],
+      },
+    };
+  }
 
-  // Call the provider or db to create a user...
-  await db.update(settings).set({
-    pin,
-  });
+  const key = field as SettingKey;
+  const schema = settingValidators[key];
+
+  const parsed = schema.safeParse(value);
+
+  if (!parsed.success) {
+    const flat = parsed.error.flatten();
+
+    return {
+      errors: {
+        // flat.formErrors is already string[]
+        value: flat.formErrors,
+      },
+    };
+  }
+
+  // If you have a single row, you might hardcode the id, or pass it via formData
+  await db.update(settings).set({ [key]: parsed.data }); // dynamic column name
+  // .where(eq(settings.id, 1)) // add a WHERE clause if needed
 
   revalidatePath("/dashboard/settings");
 
-  return {
-    success: true,
-  };
+  return { success: true };
 }
 
 // AI CHATBOT

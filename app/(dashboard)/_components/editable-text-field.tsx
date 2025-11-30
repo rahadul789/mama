@@ -3,6 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import { Edit, Loader2, Check, X } from "lucide-react";
 import { useActionState, useEffect, useState } from "react";
 import { toast } from "sonner";
@@ -18,6 +19,7 @@ type ServerAction = (
 
 type EditableTextFieldProps = {
   id: number;
+  txtArea?: boolean;
   label: string;
   name: string;
   placeholder?: string;
@@ -27,6 +29,7 @@ type EditableTextFieldProps = {
 
 export function EditableTextField({
   id,
+  txtArea,
   label,
   name,
   placeholder,
@@ -77,14 +80,24 @@ export function EditableTextField({
           <input type="hidden" name="id" value={id} />
 
           <div className="flex items-center gap-2">
-            <Input
-              type="text"
-              name={name}
-              placeholder={placeholder}
-              value={value}
-              onChange={(e) => setValue(e.target.value)}
-              className="flex-1"
-            />
+            {txtArea ? (
+              <Textarea
+                name={name}
+                placeholder={placeholder}
+                value={value}
+                onChange={(e) => setValue(e.target.value)}
+                className="flex-1"
+              />
+            ) : (
+              <Input
+                type="text"
+                name={name}
+                placeholder={placeholder}
+                value={value}
+                onChange={(e) => setValue(e.target.value)}
+                className="flex-1"
+              />
+            )}
 
             {/* Cancel */}
             <Button

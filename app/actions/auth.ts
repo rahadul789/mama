@@ -65,7 +65,7 @@ export async function signup(state: FormState, formData: FormData) {
   // Getting pin from Database for validation
   const [pinRecord] = await db.select().from(settings).limit(1);
 
-  if (pinRecord?.pin !== pin) {
+  if (pinRecord?.REGISTER_PIN !== pin) {
     return {
       errors: {
         pin: ["Pin is incorrect. Please contact support."],

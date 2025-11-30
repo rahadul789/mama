@@ -88,7 +88,7 @@ const page = async () => {
     ai: {
       questions: aiSettings?.questions?.map((q) => q) ?? [],
     },
-    pin: settings?.pin,
+    pin: settings?.REGISTER_PIN,
   };
 
   return (

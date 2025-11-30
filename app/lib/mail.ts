@@ -1,4 +1,6 @@
+// lib/job-mail.ts (or wherever this lives)
 import nodemailer from "nodemailer";
+import { getSettingDetails } from "./data";
 
 export async function sendJobApplicationMail({
   position,
@@ -14,37 +16,23 @@ export async function sendJobApplicationMail({
   resumeUrl?: string;
 }) {
   try {
+    // 1) Load settings from DB
+    const appSettings = await getSettingDetails();
+
+    // 2) Create transporter using DB values instead of env
     const transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
-        user: process.env.NOTIFY_EMAIL,
-        pass: process.env.NOTIFY_EMAIL_PASS,
+        user: appSettings.NOTIFY_EMAIL,
+        pass: appSettings.NOTIFY_EMAIL_PASS,
       },
     });
 
+    // 3) Use NOTIFY_EMAIL from DB for from/to
     await transporter.sendMail({
-      from: `"Career Portal" <${process.env.NOTIFY_EMAIL}>`,
-      to: process.env.NOTIFY_EMAIL, // <-- your admin inbox
+      from: `"Career Portal" <${appSettings.NOTIFY_EMAIL}>`,
+      to: appSettings.NOTIFY_EMAIL, // admin inbox from DB
       subject: `New Job Application — ${position}`,
-      // html: `
-      //   <h2>New Job Application</h2>
-
-      //   <p><b>Position:</b> ${position}</p>
-
-      //   <h3>Applicant Details:</h3>
-      //   <p><b>Name:</b> ${name}</p>
-      //   <p><b>Email:</b> ${email}</p>
-      //   <p><b>Phone:</b> ${phone}</p>
-
-      //   ${
-      //     resumeUrl
-      //       ? `<p><b>Resume:</b> <a href="${resumeUrl}">View Resume</a></p>`
-      //       : ""
-      //   }
-
-      //   <br/>
-      //   <p style="opacity:0.6;font-size:12px">This message is generated automatically by your job portal.</p>
-      // `,
       html: `
   <div style="font-family:Arial, sans-serif; background:#f5f7fa; padding:20px;">
     
@@ -61,39 +49,37 @@ export async function sendJobApplicationMail({
       
       <!-- Logo -->
       <div style="text-align:center; margin-bottom:20px;">
-         <div>
-             <!-- Logo -->
- <div style="
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  gap:4px;
-  margin-bottom:20px;
-">
+        <div>
+          <div style="
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            gap:4px;
+            margin-bottom:20px;
+          ">
 
-  <!-- Logo -->
-      <img 
-        src="https://harlequin-defeated-cobra-480.mypinata.cloud/ipfs/bafkreidcnlfdhqjilorhub42btrmkwgm44zrvh6kybeyxdsryla72vhcie"
-        alt="1Technologies Logo" 
-        width="40"
-        height="40"
-        style="display:block;"
-      />
+            <!-- Logo -->
+            <img 
+              src="https://harlequin-defeated-cobra-480.mypinata.cloud/ipfs/bafkreidcnlfdhqjilorhub42btrmkwgm44zrvh6kybeyxdsryla72vhcie"
+              alt="1Technologies Logo" 
+              width="40"
+              height="40"
+              style="display:block;"
+            />
 
-      <!-- Company Name -->
-      <h1 style="
-        margin:0;
-        font-size:22px;
-        font-weight:700;
-        color:#fe6b6e;
-        font-family:Arial, sans-serif;
-      ">
-        1<span style="color:#07a9c3;">Technologies</span>
-      </h1>
-
-    </div>
+            <!-- Company Name -->
+            <h1 style="
+              margin:0;
+              font-size:22px;
+              font-weight:700;
+              color:#fe6b6e;
+              font-family:Arial, sans-serif;
+            ">
+              1<span style="color:#07a9c3;">Technologies</span>
+            </h1>
 
           </div>
+        </div>
       </div>
 
       <!-- Title -->

@@ -827,18 +827,64 @@ export type AddMessageFormState =
     }
   | undefined;
 
-export type AddSettingsFormState =
+// export const addSettingsFormSchema = z.object({
+//   REGISTER_PIN: z.string().min(1, { message: "Pin can not be empty." }).trim(),
+//   OPENAI_API_KEY: z
+//     .string()
+//     .min(1, { message: "API key can not be empty." })
+//     .trim(),
+//   NOTIFY_EMAIL: z.string().email({ message: "Invalid email address." }).trim(),
+//   NOTIFY_EMAIL_PASS: z
+//     .string()
+//     .min(1, { message: "Password can not be empty." })
+//     .trim(),
+//   NEXT_PUBLIC_APP_URL: z
+//     .string()
+//     .url({ message: "Must be a valid URL." })
+//     .trim(),
+// });
+
+// export type AddSettingsFormState =
+//   | {
+//       errors?: {
+//         pin?: string[];
+//       };
+//       message?: string;
+//     }
+//   | undefined;
+
+// i copied from chatgpt below
+export const settingValidators = {
+  REGISTER_PIN: z.string().min(1, { message: "Pin can not be empty." }).trim(),
+  OPENAI_API_KEY: z
+    .string()
+    .min(1, { message: "API key can not be empty." })
+    .trim(),
+  NOTIFY_EMAIL: z.string().email({ message: "Invalid email address." }).trim(),
+  NOTIFY_EMAIL_PASS: z
+    .string()
+    .min(1, { message: "Password can not be empty." })
+    .trim(),
+  NEXT_PUBLIC_APP_URL: z
+    .string()
+    .url({ message: "Must be a valid URL." })
+    .trim(),
+} as const;
+
+export type SettingKey = keyof typeof settingValidators;
+
+export type SettingsFormState =
   | {
       errors?: {
-        pin?: string[];
+        field?: string[];
+        value?: string[];
       };
       message?: string;
     }
+  | {
+      success: true;
+    }
   | undefined;
-
-export const addSettingsFormSchema = z.object({
-  pin: z.string().min(1, { message: "Pin can not be empty." }).trim(),
-});
 
 // AI CHATBOT
 

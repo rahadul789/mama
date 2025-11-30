@@ -214,7 +214,16 @@ export const messages = pgTable("messages", {
 
 export const settings = pgTable("settings", {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),
-  pin: varchar().notNull(),
+  REGISTER_PIN: varchar().notNull(),
+
+  SMTP_USER: varchar().notNull(),
+  SMTP_PASS: varchar().notNull(),
+  NEXT_PUBLIC_APP_URL: varchar().notNull(),
+  NOTIFY_EMAIL: varchar().notNull(),
+  NOTIFY_EMAIL_PASS: varchar().notNull(),
+  PINATA_JWT: varchar().notNull(),
+  NEXT_PUBLIC_GATEWAY_URL: varchar().notNull(),
+  OPENAI_API_KEY: varchar().notNull(),
   ...timestamps,
 });
 
@@ -228,3 +237,6 @@ export const aiSettings = pgTable("ai_settings", {
 
   ...timestamps,
 });
+
+// PINATA_JWT
+// NEXT_PUBLIC_GATEWAY_URL

@@ -3,7 +3,7 @@
 import { useActionState, useEffect, useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Edit, Loader2, Plus, Trash2 } from "lucide-react";
+import { Edit, Loader2, Plus, Trash2, X } from "lucide-react";
 import clsx from "clsx";
 import { Label } from "@/components/ui/label";
 
@@ -172,11 +172,11 @@ export function EditableListField({
       {isEditing && (
         <>
           {/* Existing items */}
-          <ul className="mt-3 space-y-2">
+          <ul className="mt-3 border bg-background  p-2 rounded-lg ">
             {items.map((value, index) => (
               <li
                 key={`${name}-${index}`}
-                className="flex items-center gap-2 bg-background border rounded-lg p-2"
+                className="flex items-center gap-2  rounded-lg p-[6px]"
               >
                 <Input
                   value={value}
@@ -187,10 +187,10 @@ export function EditableListField({
                   type="button"
                   variant="ghost"
                   size="icon"
-                  className="h-8 w-8 text-red-600 hover:text-red-700"
+                  className="h-8 w-8 text-red-600 hover:text-red-700 hover:bg-red-100"
                   onClick={() => removeAt(index)}
                 >
-                  <Trash2 className="h-4 w-4" />
+                  <X className="h-4 w-4" />
                 </Button>
               </li>
             ))}

@@ -7,7 +7,6 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { addMessage } from "@/app/lib/actions";
 import { toast } from "sonner";
-import { stat } from "fs";
 
 const ContactForm = () => {
   const [state, action, pending] = useActionState(addMessage, undefined);

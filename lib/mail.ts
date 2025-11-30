@@ -1,21 +1,25 @@
 // lib/mail.ts
+import { getSettingDetails } from "@/app/lib/data";
 import nodemailer from "nodemailer";
 
-export const transporter = nodemailer.createTransport({
-  host: process.env.SMTP_HOST,
-  port: Number(process.env.SMTP_PORT) || 587,
-  secure: false, // true for port 465
-  auth: {
-    user: process.env.SMTP_USER,
-    pass: process.env.SMTP_PASS,
-  },
-});
-
 export async function sendResetEmail(to: string, token: string) {
-  const resetUrl = `${process.env.NEXT_PUBLIC_APP_URL}/reset-password?token=${token}`;
+  const appSettings = await getSettingDetails();
+
+  // You can still take host/port from env or also move them to DB if you like
+  const transporter = nodemailer.createTransport({
+    host: process.env.SMTP_HOST,
+    port: Number(process.env.SMTP_PORT) || 587,
+    secure: false, // true for port 465
+    auth: {
+      user: appSettings.NOTIFY_EMAIL,
+      pass: appSettings.NOTIFY_EMAIL_PASS,
+    },
+  });
+
+  const resetUrl = `${appSettings.NEXT_PUBLIC_APP_URL}/reset-password?token=${token}`;
 
   const mailOptions = {
-    from: `"Support" <${process.env.SMTP_USER}>`,
+    from: `"Support" <${appSettings.NOTIFY_EMAIL}>`,
     to,
     subject: "Reset your password",
     html: `
