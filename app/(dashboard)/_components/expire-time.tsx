@@ -52,8 +52,6 @@ const TimeExpire = ({ time, jobId }: TimeExpireProps) => {
     checkExpiry(); // Run immediately
     const t = setInterval(checkExpiry, 1000); // Auto-update
 
-    console.log("ccclclclclcl");
-
     return () => clearInterval(t);
   }, [time]);
 

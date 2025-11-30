@@ -312,50 +312,6 @@ export function Job({ job }: JobProps) {
       {/* ------------------------------------- */}
       {/*          DELETE BUTTON + POPOVER       */}
       {/* ------------------------------------- */}
-      {/* <Popover open={open} onOpenChange={setOpen}>
-        <PopoverTrigger asChild>
-          <Button
-            variant="ghost"
-            size="icon"
-            className="rounded-full p-2 hover:bg-red-50 dark:hover:bg-red-950"
-            disabled={pending}
-          >
-            {pending ? (
-              <Loader2 className="h-4 w-4 animate-spin" />
-            ) : (
-              <Trash2 className="h-5 w-5 text-red-600" />
-            )}
-          </Button>
-        </PopoverTrigger>
-
-        <PopoverContent className="w-52">
-          <div className="space-y-3">
-            <h4 className="font-medium text-sm">Are you sure?</h4>
-
-            <div className="flex justify-end gap-2">
-              <form action={action}>
-                <input type="hidden" name="id" value={job.id} />
-
-                <Button
-                  variant="destructive"
-                  size="sm"
-                  onClick={() => setOpen(false)}
-                >
-                  Delete
-                </Button>
-              </form>
-
-              <Button
-                size="sm"
-                variant="outline"
-                onClick={() => setOpen(false)}
-              >
-                Cancel
-              </Button>
-            </div>
-          </div>
-        </PopoverContent>
-      </Popover> */}
 
       {/* Delete Popover */}
       <Popover open={open} onOpenChange={setOpen}>

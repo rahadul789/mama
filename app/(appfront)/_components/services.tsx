@@ -193,8 +193,13 @@ export default function Features({ data, services }: ServicesProps) {
                         <Button
                           variant="link"
                           size="sm"
-                          className="opacity-0 group-hover:opacity-100 absolute top-2 right-2 
-              text-xs text-sky-300 hover:text-white transition cursor-pointer z-20"
+                          className="
+      absolute top-2 right-2 z-20
+      text-xs text-sky-300 hover:text-white transition cursor-pointer
+      opacity-100                
+      md:opacity-0                
+      md:group-hover:opacity-100  
+    "
                         >
                           Learn more <ChevronRight className="size-4" />
                         </Button>

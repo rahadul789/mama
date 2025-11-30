@@ -197,6 +197,7 @@ export async function updateFeatures(
 
   revalidatePath("/dashboard/vision");
   revalidatePath("/");
+  revalidatePath("/dashboard");
 
   return {
     success: true,
@@ -235,6 +236,7 @@ export async function updateTestimony(
 
   revalidatePath("/dashboard/vision");
   revalidatePath("/");
+  revalidatePath("/dashboard");
 
   return {
     success: true,
@@ -271,6 +273,7 @@ export async function addInfiniteItem(
 
   revalidatePath("/dashboard/infinite");
   revalidatePath("/");
+  revalidatePath("/dashboard");
 
   return {
     success: true,
@@ -317,7 +320,6 @@ export async function deleteInfiniteItem(
 
     try {
       await pinata.files.public.delete([fileIds]);
-      console.log("Deleted from Pinata:", fileId);
     } catch (err) {
       console.log("Pinata deletion failed:", err);
     }
@@ -327,6 +329,7 @@ export async function deleteInfiniteItem(
 
   revalidatePath("/dashboard/infinite");
   revalidatePath("/");
+  revalidatePath("/dashboard");
 
   return { success: true };
 }
@@ -381,7 +384,6 @@ export async function updateInfiniteItem(
 
         try {
           await pinata.files.public.delete([fileIds]);
-          console.log("Deleted from Pinata:", fileId);
         } catch (err) {
           console.log("Pinata deletion failed:", err);
         }
@@ -403,6 +405,7 @@ export async function updateInfiniteItem(
 
   revalidatePath("/dashboard/infinite");
   revalidatePath("/");
+  revalidatePath("/dashboard");
 
   return {
     success: true,
@@ -435,6 +438,7 @@ export async function updateInfiniteItemsHeading(
 
   revalidatePath("/dashboard/infinite");
   revalidatePath("/");
+  revalidatePath("/dashboard");
 
   return {
     success: true,
@@ -473,6 +477,7 @@ export async function updateContact(
 
   revalidatePath("/dashboard/home");
   revalidatePath("/");
+  revalidatePath("/dashboard");
 
   return {
     success: true,
@@ -508,6 +513,7 @@ export async function updateService(
   revalidatePath("/dashboard/services");
   revalidatePath("/services");
   revalidatePath("/");
+  revalidatePath("/dashboard");
 
   return {
     success: true,
@@ -566,7 +572,6 @@ export async function updateServiceItem(
 
         try {
           await pinata.files.public.delete([fileIds]);
-          console.log("Deleted from Pinata:", fileId);
         } catch (err) {
           console.log("Pinata deletion failed:", err);
         }
@@ -591,6 +596,7 @@ export async function updateServiceItem(
   revalidatePath("/dashboard/services");
   revalidatePath("/services");
   revalidatePath("/");
+  revalidatePath("/dashboard");
 
   return {
     success: true,
@@ -631,6 +637,7 @@ export async function addService(
   revalidatePath("/dashboard/services");
   revalidatePath("/services");
   revalidatePath("/");
+  revalidatePath("/dashboard");
 
   return {
     success: true,
@@ -677,7 +684,6 @@ export async function deleteService(
 
     try {
       await pinata.files.public.delete([fileIds]);
-      console.log("Deleted from Pinata:", fileId);
     } catch (err) {
       console.log("Pinata deletion failed:", err);
     }
@@ -688,6 +694,7 @@ export async function deleteService(
   revalidatePath("/dashboard/services");
   revalidatePath("/services");
 
+  revalidatePath("/dashboard");
   revalidatePath("/");
 
   return { success: true };
@@ -721,6 +728,7 @@ export async function updateCareer(state: CareerFormState, formData: FormData) {
   });
 
   revalidatePath("/dashboard/career");
+  revalidatePath("/dashboard");
   revalidatePath("/career");
 
   return {
@@ -843,6 +851,7 @@ export async function addJob(state: AddJobFormState, formData: FormData) {
   } as any);
 
   revalidatePath("/dashboard/career");
+  revalidatePath("/dashboard");
   revalidatePath("/career");
 
   return { success: true };
@@ -879,6 +888,7 @@ export async function updatePosition(
     .where(eq(jobs.id, id));
 
   revalidatePath("/dashboard/career");
+  revalidatePath("/dashboard");
   revalidatePath("/career");
 
   return {
@@ -933,6 +943,7 @@ export async function updateExipreTime(
     .where(eq(jobs.id, id));
 
   revalidatePath("/dashboard/career");
+  revalidatePath("/dashboard");
   revalidatePath("/career");
 
   return {
@@ -969,6 +980,7 @@ export async function updateExperience(
     .where(eq(jobs.id, id));
 
   revalidatePath("/dashboard/career");
+  revalidatePath("/dashboard");
   revalidatePath("/career");
 
   return {
@@ -1005,6 +1017,7 @@ export async function updateJobType(
     .where(eq(jobs.id, id));
 
   revalidatePath("/dashboard/career");
+  revalidatePath("/dashboard");
   revalidatePath("/career");
 
   return {
@@ -1041,6 +1054,7 @@ export async function updateEducationalLevel(
     .where(eq(jobs.id, id));
 
   revalidatePath("/dashboard/career");
+  revalidatePath("/dashboard");
   revalidatePath("/career");
 
   return {
@@ -1077,6 +1091,7 @@ export async function updateJobStatus(
     .where(eq(jobs.id, id));
 
   revalidatePath("/dashboard/career");
+  revalidatePath("/dashboard");
   revalidatePath("/career");
 
   return {
@@ -1113,6 +1128,7 @@ export async function updateSeniorityLevel(
     .where(eq(jobs.id, id));
 
   revalidatePath("/dashboard/career");
+  revalidatePath("/dashboard");
   revalidatePath("/career");
 
   return {
@@ -1153,6 +1169,7 @@ export async function updateSalary(state: SalaryFormState, formData: FormData) {
     .where(eq(jobs.id, id));
 
   revalidatePath("/dashboard/career");
+  revalidatePath("/dashboard");
   revalidatePath("/career");
 
   return {
@@ -1189,6 +1206,7 @@ export async function updateLocation(
     .where(eq(jobs.id, id));
 
   revalidatePath("/dashboard/career");
+  revalidatePath("/dashboard");
   revalidatePath("/career");
 
   return {
@@ -1225,6 +1243,7 @@ export async function updateSummary(
     .where(eq(jobs.id, id));
 
   revalidatePath("/dashboard/career");
+  revalidatePath("/dashboard");
   revalidatePath("/career");
 
   return {
@@ -1270,6 +1289,7 @@ export async function updateKeyResponsibilities(
   await db.update(jobs).set({ keyResponsibilities }).where(eq(jobs.id, id));
 
   revalidatePath("/dashboard/career");
+  revalidatePath("/dashboard");
   revalidatePath("/career");
 
   return { success: true };
@@ -1313,6 +1333,7 @@ export async function updateQualifications(
   await db.update(jobs).set({ qualifications }).where(eq(jobs.id, id));
 
   revalidatePath("/dashboard/career");
+  revalidatePath("/dashboard");
   revalidatePath("/career");
 
   return { success: true };
@@ -1340,7 +1361,7 @@ export async function updateBenefits(
   // Validate
   const validated = benefitsFormSchema.safeParse({
     id: formData.get("id"),
-    qualifications: normalized,
+    benefits: normalized,
   });
 
   if (!validated.success) {
@@ -1356,6 +1377,7 @@ export async function updateBenefits(
   await db.update(jobs).set({ benefits }).where(eq(jobs.id, id));
 
   revalidatePath("/dashboard/career");
+  revalidatePath("/dashboard");
   revalidatePath("/career");
 
   return { success: true };
@@ -1378,6 +1400,7 @@ export async function deleteJob(state: DeleteJobFormState, formData: FormData) {
   await db.delete(jobs).where(eq(jobs.id, id));
 
   revalidatePath("/dashboard/career");
+  revalidatePath("/dashboard");
   revalidatePath("/career");
 
   return { success: true };
@@ -1438,7 +1461,6 @@ export async function deleteAppliedJob(state: any, formData: FormData) {
 
     try {
       await pinata.files.public.delete([fileIds]);
-      console.log("Deleted from Pinata:", fileId);
     } catch (err) {
       console.log("Pinata deletion failed:", err);
     }
@@ -1449,6 +1471,7 @@ export async function deleteAppliedJob(state: any, formData: FormData) {
 
   // 7. Revalidate page
   revalidatePath("/dashboard/career");
+  revalidatePath("/dashboard");
   revalidatePath("/career");
 
   return { success: true };
@@ -1481,6 +1504,7 @@ export async function addBenefits(
   });
 
   revalidatePath("/dashboard/partner");
+  revalidatePath("/dashboard");
   revalidatePath("/partner");
 
   return { success: true };
@@ -1534,6 +1558,7 @@ export async function updatePartner(
   });
 
   revalidatePath("/dashboard/partner");
+  revalidatePath("/dashboard");
   revalidatePath("/partner");
 
   return {
@@ -1572,6 +1597,7 @@ export async function updateBenefitItem(
     .where(eq(partnerBenefits.id, id));
 
   revalidatePath("/dashboard/partner");
+  revalidatePath("/dashboard");
   revalidatePath("/partner");
 
   return {
@@ -1598,6 +1624,7 @@ export async function deleteBenefit(
 
   await db.delete(partnerBenefits).where(eq(partnerBenefits.id, id));
 
+  revalidatePath("/dashboard");
   revalidatePath("/dashboard/partner");
   revalidatePath("/partner");
 
@@ -1633,6 +1660,11 @@ export async function updateFooter(state: FooterFormState, formData: FormData) {
 
   revalidatePath("/dashboard/footer");
   revalidatePath("/");
+  revalidatePath("/services");
+  revalidatePath("/career");
+  revalidatePath("/contact-us");
+  revalidatePath("/partner");
+  revalidatePath("/dashboard");
 
   return {
     success: true,
@@ -1867,6 +1899,11 @@ export async function updateSettings(
   // .where(eq(settings.id, 1)) // add a WHERE clause if needed
 
   revalidatePath("/dashboard/settings");
+  revalidatePath("/");
+  revalidatePath("/services");
+  revalidatePath("/career");
+  revalidatePath("/contact-us");
+  revalidatePath("/partner");
 
   return { success: true };
 }
@@ -1900,6 +1937,11 @@ export async function addAIQuestions(
     });
 
     revalidatePath("/dashboard/settings");
+    revalidatePath("/");
+    revalidatePath("/services");
+    revalidatePath("/career");
+    revalidatePath("/contact-us");
+    revalidatePath("/partner");
     return { success: true };
   }
 
@@ -1914,6 +1956,11 @@ export async function addAIQuestions(
     .where(eq(aiSettings.id, settings.id));
 
   revalidatePath("/dashboard/settings");
+  revalidatePath("/");
+  revalidatePath("/services");
+  revalidatePath("/career");
+  revalidatePath("/contact-us");
+  revalidatePath("/partner");
 
   return {
     success: true,
@@ -1981,6 +2028,11 @@ export async function editAIQuestion(
     .where(eq(aiSettings.id, settings.id));
 
   revalidatePath("/dashboard/settings");
+  revalidatePath("/");
+  revalidatePath("/services");
+  revalidatePath("/career");
+  revalidatePath("/contact-us");
+  revalidatePath("/partner");
 
   return {
     success: true,
@@ -2034,6 +2086,11 @@ export async function deleteAIQuestion(
     .where(eq(aiSettings.id, settings.id));
 
   revalidatePath("/dashboard/settings");
+  revalidatePath("/");
+  revalidatePath("/services");
+  revalidatePath("/career");
+  revalidatePath("/contact-us");
+  revalidatePath("/partner");
 
   return {
     success: true,
@@ -2086,6 +2143,11 @@ export async function updateAIContext(
   }
 
   revalidatePath("/dashboard/settings");
+  revalidatePath("/");
+  revalidatePath("/services");
+  revalidatePath("/career");
+  revalidatePath("/contact-us");
+  revalidatePath("/partner");
 
   return { success: true };
 }

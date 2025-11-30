@@ -23,7 +23,6 @@ import {
   X,
   Trash2,
   Loader2,
-  Sparkles,
 } from "lucide-react";
 
 import {
@@ -228,7 +227,7 @@ const QuestionList = ({ onChange, aiSettings }: QuestionListProps) => {
 };
 
 /* ------------------------------------------------------ */
-/*                     SINGLE QUESTION ITEM               */
+/*               SINGLE QUESTION ITEM (FIXED)             */
 /* ------------------------------------------------------ */
 
 type QuestionItemProps = {
@@ -271,21 +270,21 @@ const QuestionItem = ({ question, onUpdate, onDelete }: QuestionItemProps) => {
       <CardContent className="flex justify-between items-center gap-3 py-3">
         <div className="flex-1">
           {isEditing ? (
-            <Input
-              value={editText}
-              onChange={(e) => setEditText(e.target.value)}
-              className="text-sm"
-              autoFocus
-            />
-          ) : (
-            <p className="text-sm text-foreground">{question.text}</p>
-          )}
-        </div>
+            /* ---------------------------------------------- */
+            /* ENTER SUBMIT FIX → wrap Input inside the form   */
+            /* ---------------------------------------------- */
+            <form
+              action={editAction}
+              className="flex items-center gap-1 w-full"
+            >
+              <Input
+                value={editText}
+                onChange={(e) => setEditText(e.target.value)}
+                className="text-sm flex-1"
+                autoFocus
+                name="question"
+              />
 
-        <div className="flex items-center gap-1">
-          {isEditing ? (
-            <form action={editAction} className="flex items-center gap-1">
-              <input type="hidden" name="question" value={editText} />
               <input type="hidden" name="index" value={question.id} />
 
               <Button
@@ -310,90 +309,67 @@ const QuestionItem = ({ question, onUpdate, onDelete }: QuestionItemProps) => {
               </Button>
             </form>
           ) : (
-            <>
-              <Button
-                size="icon"
-                variant="ghost"
-                onClick={() => setIsEditing(true)}
-                className=" rounded-full"
-              >
-                <Pencil size={16} />
-              </Button>
-
-              {/* Delete Popover */}
-              <Popover open={open} onOpenChange={setOpen}>
-                <PopoverTrigger asChild>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    disabled={deletePending}
-                    className=" cursor-pointer rounded-full"
-                  >
-                    {deletePending ? (
-                      <Loader2 className="h-4 w-4 animate-spin" />
-                    ) : (
-                      <Trash2 className="text-red-600" />
-                    )}
-                  </Button>
-                </PopoverTrigger>
-
-                {/* <PopoverContent className="w-46">
-                  <div className="space-y-2">
-                    <h4 className="font-medium">Delete question?</h4>
-                  </div>
-
-                  <div className="flex gap-2 justify-end mt-3">
-                    <form action={deleteAction}>
-                      <input type="hidden" name="index" value={question.id} />
-
-                      <Button
-                        variant="destructive"
-                        size="sm"
-                        onClick={() => setOpen(false)}
-                      >
-                        Delete
-                      </Button>
-                    </form>
-
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      onClick={() => setOpen(false)}
-                    >
-                      Cancel
-                    </Button>
-                  </div>
-                </PopoverContent> */}
-                <PopoverContent className="w-48">
-                  <h4 className="font-medium text-sm">Are you sure?</h4>
-                  <p className="text-xs text-muted-foreground mt-1">
-                    This action cannot be undone.
-                  </p>
-
-                  <div className="flex gap-2 justify-end mt-4">
-                    <form action={deleteAction}>
-                      <input type="hidden" name="index" value={question.id} />
-                      <Button
-                        variant="destructive"
-                        size="sm"
-                        onClick={() => setOpen(false)}
-                      >
-                        Delete
-                      </Button>
-                    </form>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => setOpen(false)}
-                    >
-                      Cancel
-                    </Button>
-                  </div>
-                </PopoverContent>
-              </Popover>
-            </>
+            <p className="text-sm text-foreground">{question.text}</p>
           )}
         </div>
+
+        {!isEditing && (
+          <div className="flex items-center gap-1">
+            <Button
+              size="icon"
+              variant="ghost"
+              onClick={() => setIsEditing(true)}
+              className="rounded-full"
+            >
+              <Pencil size={16} />
+            </Button>
+
+            <Popover open={open} onOpenChange={setOpen}>
+              <PopoverTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  disabled={deletePending}
+                  className="cursor-pointer rounded-full"
+                >
+                  {deletePending ? (
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                  ) : (
+                    <Trash2 className="text-red-600" />
+                  )}
+                </Button>
+              </PopoverTrigger>
+
+              <PopoverContent className="w-48">
+                <h4 className="font-medium text-sm">Are you sure?</h4>
+                <p className="text-xs text-muted-foreground mt-1">
+                  This action cannot be undone.
+                </p>
+
+                <div className="flex gap-2 justify-end mt-4">
+                  <form action={deleteAction}>
+                    <input type="hidden" name="index" value={question.id} />
+                    <Button
+                      variant="destructive"
+                      size="sm"
+                      onClick={() => setOpen(false)}
+                    >
+                      Delete
+                    </Button>
+                  </form>
+
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setOpen(false)}
+                  >
+                    Cancel
+                  </Button>
+                </div>
+              </PopoverContent>
+            </Popover>
+          </div>
+        )}
       </CardContent>
     </Card>
   );

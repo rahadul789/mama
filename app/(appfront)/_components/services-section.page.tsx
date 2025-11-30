@@ -192,7 +192,16 @@ export default function ServicesSection({
                     <Button
                       variant="link"
                       size="sm"
-                      className="pl-0 ml-0 opacity-0 group-hover:opacity-100 absolute bottom-2 right-2 text-xs transition-opacity duration-300"
+                      className="pl-0 ml-0
+                      
+
+                      absolute bottom-2 right-2 z-20
+      text-xs text-sky-300 hover:text-black transition cursor-pointer
+      opacity-100                
+      md:opacity-0                
+      md:group-hover:opacity-100  
+                      
+                      "
                     >
                       Learn more
                       <ChevronRight className="pt-1" />

@@ -12,7 +12,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Switch } from "@/components/ui/switch";
 import { Check, Edit, Loader2, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { updateSalary } from "@/app/lib/actions";
@@ -23,32 +22,38 @@ type SalaryType = "negotiable" | "range";
 interface UpdateSalaryProps {
   salary: {
     id: number;
-    type: string;
-    visible: string;
-    interval: string;
-    min: string;
-    max: string;
+    type: string | null;
+    visible: string | null;
+    interval: string | null;
+    min: string | null;
+    max: string | null;
   };
 }
 
 const UpdateSalary = ({ salary }: UpdateSalaryProps) => {
-  // controlled states
-  const [salaryMinValue, setSalaryMinValue] = useState(salary.min);
-  const [salaryMaxValue, setSalaryMaxValue] = useState(salary.max);
+  /* ------------------------------------------------------
+     FIX: Normalize database null → "" to prevent React errors
+     ------------------------------------------------------ */
+  const [salaryMinValue, setSalaryMinValue] = useState(salary.min ?? "");
+  const [salaryMaxValue, setSalaryMaxValue] = useState(salary.max ?? "");
   const [salaryType, setSalaryType] = useState<SalaryType>(
-    salary.type as SalaryType
+    (salary.type as SalaryType) ?? "negotiable"
   );
-  const [salaryInterval, setSalaryInterval] = useState(salary.interval);
-  const [isSalaryVisible, setIsSalaryVisible] = useState(!!salary.visible);
+  const [salaryInterval, setSalaryInterval] = useState(
+    salary.interval ?? "monthly"
+  );
+  const [isSalaryVisible, setIsSalaryVisible] = useState(
+    salary.visible === "true"
+  );
 
   const [isEditing, setIsEditing] = useState(false);
-
-  // local validation errors
   const [errors, setErrors] = useState<any>({});
 
   const [state, formAction, pending] = useActionState(updateSalary, undefined);
 
-  // LOCAL VALIDATION BEFORE FORM SUBMIT
+  /* ------------------------------------------------------
+     LOCAL VALIDATION
+     ------------------------------------------------------ */
   const handleSubmit = (formData: FormData) => {
     const newErrors: any = {};
 
@@ -60,24 +65,24 @@ const UpdateSalary = ({ salary }: UpdateSalaryProps) => {
 
     setErrors(newErrors);
 
-    if (Object.keys(newErrors).length > 0) {
-      return; // ❌ block action
-    }
+    if (Object.keys(newErrors).length > 0) return;
 
-    if (salaryType == "negotiable") {
-      setSalaryMaxValue("");
+    if (salaryType === "negotiable") {
       setSalaryMinValue("");
-      setSalaryInterval("");
+      setSalaryMaxValue("");
+      setSalaryInterval("monthly");
     }
 
-    // submit to server action
     formAction(formData);
   };
 
+  /* ------------------------------------------------------
+     SUCCESS HANDLER
+     ------------------------------------------------------ */
   useEffect(() => {
     if (state?.success) {
       setIsEditing(false);
-      toast.success(`Salary updated successfully.`);
+      toast.success("Salary updated successfully.");
     }
   }, [state]);
 
@@ -96,6 +101,9 @@ const UpdateSalary = ({ salary }: UpdateSalaryProps) => {
         <Label className="font-semibold text-sm">Salary</Label>
       </div>
 
+      {/* ------------------------------------------------------
+         FORM (EDIT MODE)
+         ------------------------------------------------------ */}
       {isEditing ? (
         <form
           action={handleSubmit}
@@ -111,6 +119,7 @@ const UpdateSalary = ({ salary }: UpdateSalaryProps) => {
 
                 <input type="hidden" name="salaryType" value={salaryType} />
 
+                {/* Salary Type Radio */}
                 <RadioGroup
                   className="flex flex-col gap-2 sm:flex-row"
                   value={salaryType}
@@ -127,9 +136,11 @@ const UpdateSalary = ({ salary }: UpdateSalaryProps) => {
                   </div>
                 </RadioGroup>
 
+                {/* Range Inputs */}
                 {salaryType === "range" && (
                   <div className="mt-2 space-y-2">
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                      {/* Min */}
                       <div className="space-y-1">
                         <Label className="text-xs font-medium">Minimum</Label>
                         <Input
@@ -145,6 +156,7 @@ const UpdateSalary = ({ salary }: UpdateSalaryProps) => {
                         )}
                       </div>
 
+                      {/* Max */}
                       <div className="space-y-1">
                         <Label className="text-xs font-medium">Maximum</Label>
                         <Input
@@ -161,12 +173,13 @@ const UpdateSalary = ({ salary }: UpdateSalaryProps) => {
                       </div>
                     </div>
 
+                    {/* Interval */}
                     <div className="space-y-1">
                       <Label className="text-xs font-medium">Interval</Label>
 
                       <Select
                         value={salaryInterval}
-                        onValueChange={(v: string) => setSalaryInterval(v)}
+                        onValueChange={(v) => setSalaryInterval(v)}
                       >
                         <SelectTrigger>
                           <SelectValue placeholder="Select interval" />
@@ -195,6 +208,7 @@ const UpdateSalary = ({ salary }: UpdateSalaryProps) => {
               </div>
             </div>
 
+            {/* Buttons */}
             <div className="flex gap-2 justify-end">
               <Button
                 type="button"
@@ -222,6 +236,9 @@ const UpdateSalary = ({ salary }: UpdateSalaryProps) => {
           </div>
         </form>
       ) : (
+        /* ------------------------------------------------------
+           DISPLAY MODE
+           ------------------------------------------------------ */
         <p className="text-muted-foreground text-sm mt-2">
           {salary.type === "range" ? (
             <span>
@@ -229,7 +246,9 @@ const UpdateSalary = ({ salary }: UpdateSalaryProps) => {
             </span>
           ) : (
             <span>
-              {salary.type?.charAt(0).toUpperCase() + salary.type?.slice(1)}
+              {salary.type
+                ? salary.type.charAt(0).toUpperCase() + salary.type.slice(1)
+                : ""}
             </span>
           )}
         </p>
