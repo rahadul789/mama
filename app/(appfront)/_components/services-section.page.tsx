@@ -61,9 +61,9 @@ export default function ServicesSection({
       {/* ============================================================
           🔥 HERO BANNER WITH 3 FLOATING CIRCLES
       ============================================================ */}
-      <div className="relative w-full min-h-[45vh] md:min-h-[60vh] bg-slate-900 overflow-hidden">
+      <div className="relative w-full min-h-[45vh] md:min-h-[60vh] bg-brand-teal overflow-hidden">
         {/* Background base layer */}
-        <div className="absolute inset-0 bg-slate-900 z-0" />
+        <div className="absolute inset-0 bg-brand-teal z-0" />
 
         {/* Gold glow behind heading */}
         <div className="absolute inset-0 z-0 bg-[radial-gradient(circle_at_center,rgba(251,191,36,0.18),transparent_60%)]" />
