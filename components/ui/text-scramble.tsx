@@ -1,85 +1,109 @@
-'use client';
-import { type JSX, useEffect, useState } from 'react';
-import { motion, MotionProps } from 'motion/react';
+"use client";
 
-export type TextScrambleProps = {
+import { ElementType, useEffect, useRef } from "react";
+import { motion, MotionProps } from "motion/react";
+
+export type TextScrambleProps<T extends ElementType = "p"> = {
   children: string;
-  duration?: number;
-  speed?: number;
+  duration?: number; // milliseconds
   characterSet?: string;
-  as?: React.ElementType;
+  as?: T;
   className?: string;
   trigger?: boolean;
   onScrambleComplete?: () => void;
 } & MotionProps;
 
-const defaultChars =
-  'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+const DEFAULT_CHARS =
+  "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
-export function TextScramble({
+export function TextScramble<T extends ElementType = "p">({
   children,
-  duration = 0.8,
-  speed = 0.04,
-  characterSet = defaultChars,
+  duration = 800,
+  characterSet = DEFAULT_CHARS,
+  as,
   className,
-  as: Component = 'p',
   trigger = true,
   onScrambleComplete,
   ...props
-}: TextScrambleProps) {
-  const MotionComponent = motion.create(
-    Component as keyof JSX.IntrinsicElements
-  );
-  const [displayText, setDisplayText] = useState(children);
-  const [isAnimating, setIsAnimating] = useState(false);
-  const text = children;
+}: TextScrambleProps<T>) {
+  const Component = motion.create(as ?? "p");
 
-  const scramble = async () => {
-    if (isAnimating) return;
-    setIsAnimating(true);
+  const elementRef = useRef<HTMLElement | null>(null);
+  const rafRef = useRef<number | null>(null);
+  const startTimeRef = useRef<number>(0);
+  const runningRef = useRef(false);
 
-    const steps = duration / speed;
-    let step = 0;
-
-    const interval = setInterval(() => {
-      let scrambled = '';
-      const progress = step / steps;
-
-      for (let i = 0; i < text.length; i++) {
-        if (text[i] === ' ') {
-          scrambled += ' ';
-          continue;
-        }
-
-        if (progress * text.length > i) {
-          scrambled += text[i];
-        } else {
-          scrambled +=
-            characterSet[Math.floor(Math.random() * characterSet.length)];
-        }
-      }
-
-      setDisplayText(scrambled);
-      step++;
-
-      if (step > steps) {
-        clearInterval(interval);
-        setDisplayText(text);
-        setIsAnimating(false);
-        onScrambleComplete?.();
-      }
-    }, speed * 1000);
-  };
+  // Precomputed random characters (critical for smoothness)
+  const randomCharsRef = useRef<string[]>([]);
 
   useEffect(() => {
-    if (!trigger) return;
+    const el = elementRef.current;
+    if (!el || !trigger || runningRef.current) return;
 
-    scramble();
-  }, [trigger]);
+    runningRef.current = true;
+    startTimeRef.current = performance.now();
+
+    const text = children;
+    const length = text.length;
+    const chars = characterSet;
+    const charsLength = chars.length;
+
+    // 🔒 Generate randomness ONCE (no randomness during animation)
+    randomCharsRef.current = Array.from(
+      { length },
+      () => chars[(Math.random() * charsLength) | 0]
+    );
+
+    const animate = (now: number) => {
+      const progress = Math.min((now - startTimeRef.current) / duration, 1);
+
+      const revealCount = Math.floor(progress * length);
+
+      let output = "";
+      for (let i = 0; i < length; i++) {
+        const originalChar = text[i];
+
+        if (originalChar === " ") {
+          output += " ";
+        } else if (i < revealCount) {
+          output += originalChar;
+        } else {
+          output += randomCharsRef.current[i];
+        }
+      }
+
+      // Direct DOM write → no React re-render
+      el.textContent = output;
+
+      if (progress < 1) {
+        rafRef.current = requestAnimationFrame(animate);
+      } else {
+        el.textContent = text;
+        runningRef.current = false;
+        onScrambleComplete?.();
+      }
+    };
+
+    rafRef.current = requestAnimationFrame(animate);
+
+    return () => {
+      if (rafRef.current !== null) {
+        cancelAnimationFrame(rafRef.current);
+        rafRef.current = null;
+      }
+      runningRef.current = false;
+    };
+  }, [trigger, children, duration, characterSet, onScrambleComplete]);
 
   return (
-    <MotionComponent className={className} {...props}>
-      {displayText}
-    </MotionComponent>
+    <Component
+      ref={(node: HTMLElement | null) => {
+        elementRef.current = node;
+      }}
+      className={className}
+      {...props}
+    >
+      {children}
+    </Component>
   );
 }

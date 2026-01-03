@@ -115,20 +115,6 @@ export default function Footer({ data }: FooterProps) {
             ))}
           </div>
         </div>
-
-        {/* Bottom Bar */}
-        <div className="mt-16 flex flex-wrap justify-between items-center gap-4 rounded-xl bg-white/50 dark:bg-white/5 backdrop-blur-md border px-6 py-4 shadow-sm">
-          <span className="text-sm text-muted-foreground hover:text-brand-teal transition">
-            {data?.copyright}
-          </span>
-
-          <Link
-            href="#"
-            className="text-sm text-muted-foreground hover:text-brand-teal transition"
-          >
-            Licence
-          </Link>
-        </div>
       </div>
     </footer>
   );
